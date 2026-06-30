@@ -127,6 +127,14 @@ const impactMetrics = [
   ['24+', 'anos de história'],
 ];
 
+const processSteps = [
+  { icon: Users, title: 'Diagnostico', text: 'Entendimento da necessidade, operacao e prioridade tecnica do cliente.' },
+  { icon: FileText, title: 'Engenharia', text: 'Definicao da solucao, documentacao e planejamento para fabricar ou executar.' },
+  { icon: Factory, title: 'Fabricacao', text: 'Producao industrial com foco em robustez, prazo e aderencia ao processo.' },
+  { icon: HardHat, title: 'Montagem', text: 'Equipe em campo para instalacao, paradas, movimentacao e integracao.' },
+  { icon: Gauge, title: 'Performance', text: 'Acompanhamento apos a entrega para qualidade, eficiencia e confianca.' }
+];
+
 const serviceDetails = {
   'montagem-industrial': {
     description: 'Planejamento, fabricacao e montagem de equipamentos, tubulacoes, estruturas e plantas industriais para operacoes sucroalcooleiras, energia e utilidades.',
@@ -279,6 +287,10 @@ function CatalogCta({ settings }) {
   return <section className="catalog-cta"><div><span>Catalogo tecnico</span><h2>Produtos, servicos e aplicacoes em um material comercial</h2><p>Abra o catalogo digital da IMEC para apresentar rapidamente a empresa, linha de produtos, atuacao em usinas e canais de contato.</p></div><div><a className="btn primary" href="/catalogo-imec.html" target="_blank" rel="noreferrer"><Download size={17} /> Abrir catalogo</a><a className="btn outline" href={whatsappUrl(settings, 'Ola! Gostaria de receber o catalogo e falar sobre uma solucao da IMEC Metalurgica.')} target="_blank" rel="noreferrer"><MessageCircle size={17} /> Receber no WhatsApp</a></div></section>;
 }
 
+function ProcessFlow() {
+  return <section className="process-flow"><div className="process-heading"><span>Metodo IMEC</span><h2>Do diagnostico ao desempenho em campo</h2><p>Uma jornada visual para mostrar que a IMEC nao vende apenas equipamentos: entrega engenharia, execucao e acompanhamento tecnico.</p></div><div className="process-track">{processSteps.map((step, index) => { const Icon = step.icon; return <article key={step.title}><small>{String(index + 1).padStart(2, '0')}</small><Icon /><h3>{step.title}</h3><p>{step.text}</p></article>; })}</div></section>;
+}
+
 function Home({ data }) {
   const settings = officialSettings(data.settings || {});
   const home = officialPage(data.pages?.home || {}, 'home');
@@ -292,6 +304,7 @@ function Home({ data }) {
     <ImpactStrip />
     <CatalogCta settings={settings} />
     <section className="home-strip services-strip"><div className="strip-title"><span>Principais Serviços</span><h2>Atuação no setor sucroalcooleiro</h2><a href="/servicos">Ver todos <ChevronRight size={16} /></a></div><div className="service-row">{services.slice(0, 6).map((item) => <ServiceCard item={item} key={item.id} />)}</div></section>
+    <ProcessFlow />
     <section className="home-strip portfolio-strip"><div className="strip-title"><span>Produtos</span><h2>Equipamentos para usinas</h2><a href="/portfolio">Ver produtos <ChevronRight size={16} /></a></div><div className="portfolio-row">{portfolio.slice(0, 6).map((item) => <PortfolioCard item={item} key={item.id} />)}</div></section>
     <section className="quick-links" style={{ backgroundImage: `linear-gradient(90deg,rgba(4,14,24,.94),rgba(8,31,52,.92)),url(${footerImage})` }}><a href="/produtos"><Factory /><b>Produtos</b><small>Equipamentos para usinas, destilação e tratamento de fuligem.</small></a><a href="/setores"><Building2 /><b>Setores</b><small>Etanol, açúcar, energia e indústria alimentícia.</small></a><a href={whatsappUrl(settings)} target="_blank" rel="noreferrer"><UserCircle /><b>Orçamento</b><small>Fale com a equipe técnica da IMEC pelo WhatsApp.</small></a></section>
     <section className="overview-band"><div><span>Referência nacional</span><h2>Mais de 100 usinas atendidas</h2><p>A IMEC reúne experiência no setor sucroalcooleiro, comunicação direta com o cliente e acompanhamento de performance após a entrega.</p></div><div className="overview-grid">{differentials.map((item) => <InfoCard key={item.title} {...item} />)}</div></section>
@@ -393,7 +406,7 @@ function PublicSite() {
   useEffect(() => { api('/public/bootstrap').then(setData).catch(() => {}); }, []);
   const current = window.location.pathname.replace(/\/$/, '') || '/';
   useEffect(() => {
-    const targets = document.querySelectorAll('.home-strip,.quick-links,.overview-band,.page-grid,.gallery-grid,.video-grid,.content-split,.timeline-section,.product-list,.client-section,.contact-page,.service-card,.portfolio-card,.info-card,.impact-strip article,.catalog-cta,.detail-page');
+    const targets = document.querySelectorAll('.home-strip,.quick-links,.overview-band,.page-grid,.gallery-grid,.video-grid,.content-split,.timeline-section,.product-list,.client-section,.contact-page,.service-card,.portfolio-card,.info-card,.impact-strip article,.catalog-cta,.detail-page,.process-flow,.process-track article,.map-card');
     targets.forEach((target) => target.classList.add('reveal'));
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
