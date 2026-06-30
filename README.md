@@ -61,11 +61,20 @@ Repository: octaviano12-prog/imecsite
 Build command: npm run build
 Start command: npm start
 Startup file / Application file: index.js
+Public directory: public
 ```
 
-Se a Hostinger mostrar 403 depois de uma implantação concluída, confira principalmente o campo `Startup file / Application file`. Ele precisa apontar para `index.js`, que fica na raiz do repositório.
+O build do React agora gera `public/index.html` na raiz do repositório. Isso ajuda a evitar o erro 403 quando a Hostinger tenta abrir uma pasta sem arquivo inicial.
 
-O `postinstall` instala automaticamente as dependências do `backend` e do `frontend`. O backend também serve o build do React em `frontend/dist`.
+Se a Hostinger mostrar 403 depois de uma implantação concluída, confira:
+
+1. `Startup file / Application file`: `index.js`
+2. `Public directory`: `public`
+3. Build command: `npm run build`
+4. Start command: `npm start`
+5. Se `/api/health` abrir, o Node iniciou corretamente.
+
+O `postinstall` instala automaticamente as dependências do `backend` e do `frontend`. O backend serve o build do React gerado em `public/`.
 
 Variáveis principais no painel da Hostinger:
 
