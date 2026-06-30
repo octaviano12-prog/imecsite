@@ -38,18 +38,33 @@ const storage = multer.diskStorage({
   destination: (_req, _file, cb) => cb(null, env.uploadDir),
   filename: (_req, file, cb) => cb(null, `${Date.now()}-${file.originalname.replace(/[^a-zA-Z0-9._-]/g, '-')}`)
 });
-const upload = multer({ storage, limits: { fileSize: env.maxUploadMb * 1024 * 1024 }, fileFilter: (_req, file, cb) => cb(file.mimetype.startsWith('image/') ? null : new Error('Envie apenas imagens.'), true) });
+const upload = multer({
+  storage,
+  limits: { fileSize: env.maxUploadMb * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => cb(file.mimetype.startsWith('image/') ? null : new Error('Envie apenas imagens.'), true)
+});
 
 function auth(req, res, next) {
   const header = req.headers.authorization || '';
   const token = header.startsWith('Bearer ') ? header.slice(7) : null;
   if (!token) return res.status(401).json({ message: 'Acesso não autorizado.' });
-  try { req.user = jwt.verify(token, env.jwtSecret); next(); } catch { res.status(401).json({ message: 'Sessão inválida ou expirada.' }); }
+  try {
+    req.user = jwt.verify(token, env.jwtSecret);
+    next();
+  } catch {
+    res.status(401).json({ message: 'Sessão inválida ou expirada.' });
+  }
 }
-function slug(value) { return slugify(value || '', { lower: true, strict: true }); }
-function youtubeId(url = '') { return (url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{6,})/) || [])[1] || ''; }
 
-app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+function slug(value) {
+  return slugify(value || '', { lower: true, strict: true });
+}
+
+function youtubeId(url = '') {
+  return (url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{6,})/) || [])[1] || '';
+}
+
+app.use(helmet({ contentSecurityPolicy: false, crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(cors({ origin: env.appUrl, credentials: true }));
 app.use(express.json({ limit: '2mb' }));
 app.use('/uploads', express.static(path.resolve(env.uploadDir)));
@@ -83,21 +98,27 @@ app.post('/api/public/quotes', async (req, res) => {
 });
 
 app.use('/api/admin', auth);
+
 app.get('/api/admin/settings', async (_req, res) => res.json((await query('SELECT * FROM company_settings WHERE id=1'))[0]));
+
 app.put('/api/admin/settings', async (req, res) => {
   await query(`UPDATE company_settings SET company_name=:company_name,logo_url=:logo_url,phone=:phone,whatsapp=:whatsapp,email=:email,address=:address,city=:city,state=:state,hero_image_url=:hero_image_url,youtube_url=:youtube_url,instagram_url=:instagram_url,linkedin_url=:linkedin_url,facebook_url=:facebook_url WHERE id=1`, req.body);
   res.json({ message: 'Dados atualizados.' });
 });
+
 app.post('/api/admin/upload', upload.single('file'), (req, res) => res.status(201).json({ url: `/uploads/${req.file.filename}` }));
 
 const tables = { pages: 'pages', services: 'services', portfolio: 'portfolio_projects', categories: 'gallery_categories', photos: 'gallery_photos', videos: 'videos', quotes: 'quote_requests' };
+
 app.get('/api/admin/:resource', async (req, res) => {
   const table = tables[req.params.resource];
   if (!table) return res.status(404).json({ message: 'Recurso não encontrado.' });
   res.json(await query(`SELECT * FROM ${table} ORDER BY id DESC`));
 });
+
 app.post('/api/admin/:resource', async (req, res) => {
-  const r = req.params.resource, b = req.body;
+  const r = req.params.resource;
+  const b = req.body;
   if (r === 'pages') await query('INSERT INTO pages (slug,title,subtitle,content,image_url,is_active) VALUES (:slug,:title,:subtitle,:content,:image_url,:is_active)', { ...b, slug: b.slug || slug(b.title) });
   if (r === 'services') await query('INSERT INTO services (title,slug,short_description,description,icon,image_url,display_order,is_active) VALUES (:title,:slug,:short_description,:description,:icon,:image_url,:display_order,:is_active)', { ...b, slug: b.slug || slug(b.title) });
   if (r === 'portfolio') await query('INSERT INTO portfolio_projects (title,slug,category,location,year,short_description,description,cover_image_url,display_order,is_active) VALUES (:title,:slug,:category,:location,:year,:short_description,:description,:cover_image_url,:display_order,:is_active)', { ...b, slug: b.slug || slug(b.title) });
@@ -106,8 +127,10 @@ app.post('/api/admin/:resource', async (req, res) => {
   if (r === 'videos') await query('INSERT INTO videos (title,youtube_url,description,display_order,is_active) VALUES (:title,:youtube_url,:description,:display_order,:is_active)', b);
   res.status(201).json({ message: 'Conteúdo criado.' });
 });
+
 app.put('/api/admin/:resource/:id', async (req, res) => {
-  const r = req.params.resource, b = { ...req.body, id: req.params.id };
+  const r = req.params.resource;
+  const b = { ...req.body, id: req.params.id };
   if (r === 'pages') await query('UPDATE pages SET title=:title,subtitle=:subtitle,content=:content,image_url=:image_url,is_active=:is_active WHERE id=:id', b);
   if (r === 'services') await query('UPDATE services SET title=:title,slug=:slug,short_description=:short_description,description=:description,icon=:icon,image_url=:image_url,display_order=:display_order,is_active=:is_active WHERE id=:id', { ...b, slug: b.slug || slug(b.title) });
   if (r === 'portfolio') await query('UPDATE portfolio_projects SET title=:title,slug=:slug,category=:category,location=:location,year=:year,short_description=:short_description,description=:description,cover_image_url=:cover_image_url,display_order=:display_order,is_active=:is_active WHERE id=:id', { ...b, slug: b.slug || slug(b.title) });
@@ -117,12 +140,22 @@ app.put('/api/admin/:resource/:id', async (req, res) => {
   if (r === 'quotes') await query('UPDATE quote_requests SET status=:status WHERE id=:id', b);
   res.json({ message: 'Conteúdo atualizado.' });
 });
+
 app.delete('/api/admin/:resource/:id', async (req, res) => {
   const table = tables[req.params.resource];
   if (!table || req.params.resource === 'quotes') return res.status(404).json({ message: 'Recurso não encontrado.' });
   await query(`DELETE FROM ${table} WHERE id=:id`, { id: req.params.id });
   res.json({ message: 'Registro excluído.' });
 });
+
+const frontendDist = path.resolve(process.cwd(), 'frontend', 'dist');
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+  app.get('*', (req, res) => {
+    if (req.path.startsWith('/api')) return res.status(404).json({ message: 'Rota de API não encontrada.' });
+    res.sendFile(path.join(frontendDist, 'index.html'));
+  });
+}
 
 app.use((err, _req, res, _next) => res.status(500).json({ message: err.message || 'Erro interno.' }));
 app.listen(env.port, () => console.log(`API IMEC rodando na porta ${env.port}`));
