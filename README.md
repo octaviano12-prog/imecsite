@@ -54,17 +54,16 @@ npm run dev
 
 Na implantação Node.js da Hostinger, use a raiz do repositório.
 
-Comando de build:
+Configuração recomendada:
 
-```bash
-npm run build
+```txt
+Repository: octaviano12-prog/imecsite
+Build command: npm run build
+Start command: npm start
+Startup file / Application file: index.js
 ```
 
-Comando de start:
-
-```bash
-npm start
-```
+Se a Hostinger mostrar 403 depois de uma implantação concluída, confira principalmente o campo `Startup file / Application file`. Ele precisa apontar para `index.js`, que fica na raiz do repositório.
 
 O `postinstall` instala automaticamente as dependências do `backend` e do `frontend`. O backend também serve o build do React em `frontend/dist`.
 
