@@ -34,8 +34,11 @@ const env = {
 
 const uploadDir = path.resolve(rootDir, env.uploadDir);
 const frontendDistCandidates = [
+  path.resolve(rootDir, 'public'),
   path.resolve(rootDir, 'frontend', 'dist'),
+  path.resolve(process.cwd(), 'public'),
   path.resolve(process.cwd(), 'frontend', 'dist'),
+  path.resolve(process.cwd(), '..', 'public'),
   path.resolve(process.cwd(), '..', 'frontend', 'dist')
 ];
 const frontendDist = frontendDistCandidates.find((candidate) => fs.existsSync(path.join(candidate, 'index.html')));
