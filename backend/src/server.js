@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -11,7 +12,9 @@ import mysql from 'mysql2/promise';
 import slugify from 'slugify';
 import dotenv from 'dotenv';
 
-dotenv.config();
+const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+dotenv.config({ path: path.join(rootDir, '.env') });
+dotenv.config({ path: path.join(rootDir, 'backend', '.env') });
 
 const env = {
   port: Number(process.env.PORT || 3333),
@@ -29,13 +32,21 @@ const env = {
   }
 };
 
+const uploadDir = path.resolve(rootDir, env.uploadDir);
+const frontendDistCandidates = [
+  path.resolve(rootDir, 'frontend', 'dist'),
+  path.resolve(process.cwd(), 'frontend', 'dist'),
+  path.resolve(process.cwd(), '..', 'frontend', 'dist')
+];
+const frontendDist = frontendDistCandidates.find((candidate) => fs.existsSync(path.join(candidate, 'index.html')));
+
 const pool = mysql.createPool({ ...env.db, waitForConnections: true, connectionLimit: 10, namedPlaceholders: true });
 const query = async (sql, params = {}) => (await pool.execute(sql, params))[0];
 const app = express();
 
-fs.mkdirSync(env.uploadDir, { recursive: true });
+fs.mkdirSync(uploadDir, { recursive: true });
 const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, env.uploadDir),
+  destination: (_req, _file, cb) => cb(null, uploadDir),
   filename: (_req, file, cb) => cb(null, `${Date.now()}-${file.originalname.replace(/[^a-zA-Z0-9._-]/g, '-')}`)
 });
 const upload = multer({
@@ -67,7 +78,7 @@ function youtubeId(url = '') {
 app.use(helmet({ contentSecurityPolicy: false, crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(cors({ origin: env.appUrl, credentials: true }));
 app.use(express.json({ limit: '2mb' }));
-app.use('/uploads', express.static(path.resolve(env.uploadDir)));
+app.use('/uploads', express.static(uploadDir));
 
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', app: 'IMEC Metalúrgica API' }));
 
@@ -98,14 +109,11 @@ app.post('/api/public/quotes', async (req, res) => {
 });
 
 app.use('/api/admin', auth);
-
 app.get('/api/admin/settings', async (_req, res) => res.json((await query('SELECT * FROM company_settings WHERE id=1'))[0]));
-
 app.put('/api/admin/settings', async (req, res) => {
   await query(`UPDATE company_settings SET company_name=:company_name,logo_url=:logo_url,phone=:phone,whatsapp=:whatsapp,email=:email,address=:address,city=:city,state=:state,hero_image_url=:hero_image_url,youtube_url=:youtube_url,instagram_url=:instagram_url,linkedin_url=:linkedin_url,facebook_url=:facebook_url WHERE id=1`, req.body);
   res.json({ message: 'Dados atualizados.' });
 });
-
 app.post('/api/admin/upload', upload.single('file'), (req, res) => res.status(201).json({ url: `/uploads/${req.file.filename}` }));
 
 const tables = { pages: 'pages', services: 'services', portfolio: 'portfolio_projects', categories: 'gallery_categories', photos: 'gallery_photos', videos: 'videos', quotes: 'quote_requests' };
@@ -148,13 +156,14 @@ app.delete('/api/admin/:resource/:id', async (req, res) => {
   res.json({ message: 'Registro excluído.' });
 });
 
-const frontendDist = path.resolve(process.cwd(), 'frontend', 'dist');
-if (fs.existsSync(frontendDist)) {
+if (frontendDist) {
   app.use(express.static(frontendDist));
   app.get('*', (req, res) => {
     if (req.path.startsWith('/api')) return res.status(404).json({ message: 'Rota de API não encontrada.' });
     res.sendFile(path.join(frontendDist, 'index.html'));
   });
+} else {
+  app.get('/', (_req, res) => res.status(503).send('Build do frontend nao encontrado. Rode npm run build.'));
 }
 
 app.use((err, _req, res, _next) => res.status(500).json({ message: err.message || 'Erro interno.' }));
