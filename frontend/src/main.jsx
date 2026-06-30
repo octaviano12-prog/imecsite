@@ -3,8 +3,10 @@ import { createRoot } from 'react-dom/client';
 import {
   Award,
   Building2,
+  Briefcase,
   Camera,
   ChevronRight,
+  Download,
   FileText,
   Factory,
   Gauge,
@@ -23,6 +25,7 @@ import {
   ShieldCheck,
   Upload,
   UserCircle,
+  Users,
   Wrench,
   X,
   Youtube
@@ -87,6 +90,36 @@ const fallbackPortfolio = [
   { title: 'Plantas para Usinas', category: 'Etanol, açúcar e energia', image_url: portfolioCargas },
 ].map((item, index) => ({ id: `p${index}`, ...item }));
 
+const sectors = [
+  'Usinas de açúcar e álcool',
+  'Fabricação de etanol combustível, neutro e especial',
+  'Energia e cogeração',
+  'Indústria alimentícia',
+  'Plantas industriais e utilidades',
+  'Tratamento de fuligem de caldeira',
+];
+
+const clients = [
+  'Mais de 100 usinas de açúcar e álcool atendidas',
+  'Indústria alimentícia',
+  'Destilarias e plantas de etanol',
+  'Projetos industriais com acompanhamento de performance',
+];
+
+const timeline = [
+  ['1998', 'Início das atividades com fabricação, montagem e manutenção para o setor sucroalcooleiro.'],
+  ['2000', 'Diversificação das atividades e entrada em novos clientes industriais.'],
+  ['2004', 'Fabricação de aparelho de destilação de álcool hidratado de grande capacidade.'],
+  ['2006', 'Marco em serviços completos com caldeiras, transportadores, tratamento de caldo e destilação.'],
+  ['2022', 'Investimento em nova fábrica com 5.000 m² de área fabril e equipamentos de ponta.'],
+];
+
+const differentials = [
+  { icon: Award, title: 'Acompanhamento de Performance', text: 'A IMEC acompanha o desempenho dos produtos e serviços após a entrega, garantindo eficiência e qualidade.' },
+  { icon: Users, title: 'Comunicação Direta', text: 'O cliente tem acesso ao responsável pelo projeto, sem intermediários ou demora para atendimento.' },
+  { icon: FileText, title: 'Fornecedor BNDES', text: 'Empresa cadastrada como fornecedora de produtos e serviços pelo BNDES.' },
+];
+
 function officialSettings(settings = {}) {
   const oldPhone = !settings.phone || settings.phone.includes('(47)');
   return oldPhone
@@ -117,7 +150,7 @@ function Logo({ settings = {} }) {
 function Header({ settings, current }) {
   const [open, setOpen] = useState(false);
   const nav = [
-    ['/', 'Home'], ['/quem-somos', 'Quem Somos'], ['/servicos', 'Serviços'], ['/galeria', 'Galeria'], ['/videos', 'Vídeos'], ['/portfolio', 'Portfólio'], ['/contato', 'Contato']
+    ['/', 'Home'], ['/quem-somos', 'Empresa'], ['/servicos', 'Serviços'], ['/produtos', 'Produtos'], ['/setores', 'Setores'], ['/clientes', 'Clientes'], ['/contato', 'Contato']
   ];
   return <header className="topbar">
     <Logo settings={settings} />
@@ -133,7 +166,7 @@ function Header({ settings, current }) {
 function Footer({ settings }) {
   return <footer className="footer">
     <div><Logo settings={settings} /><p>Soluções industriais com engenharia, tecnologia e confiança.</p><small className="version-tag">{SITE_VERSION}</small></div>
-    <div><h4>Navegação</h4><a href="/">Home</a><a href="/quem-somos">Quem Somos</a><a href="/servicos">Serviços</a><a href="/portfolio">Portfólio</a></div>
+    <div><h4>Navegação</h4><a href="/">Home</a><a href="/quem-somos">Empresa</a><a href="/servicos">Serviços</a><a href="/produtos">Produtos</a><a href="/setores">Setores</a><a href="/clientes">Clientes</a><a href="/trabalhe-conosco">Trabalhe conosco</a></div>
     <div><h4>Contato</h4><span>{settings?.phone || DEFAULT_PHONE}</span><span>{settings?.email || DEFAULT_EMAIL}</span><span>{settings?.address || DEFAULT_ADDRESS}</span><a href={whatsappUrl(settings)}>Chamar no WhatsApp</a></div>
     <div><h4>Redes sociais</h4><div className="socials"><a href={settings?.linkedin_url || '#'}><Linkedin size={18} /></a><a href={settings?.instagram_url || '#'}><Instagram size={18} /></a><a href={settings?.youtube_url || '#'}><Youtube size={18} /></a></div></div>
     <a className="admin-link" href="/admin"><Lock size={14} /> Painel administrativo</a>
@@ -153,6 +186,10 @@ function PortfolioCard({ item }) {
   return <article className="portfolio-card" style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.86)), url(${assetUrl(item.cover_image_url || item.image_url)})` }}><strong>{item.title}</strong><span>{item.category || item.short_description || 'Obra industrial'}</span></article>;
 }
 
+function InfoCard({ icon: Icon = FileText, title, text }) {
+  return <article className="info-card"><Icon /><h3>{title}</h3><p>{text}</p></article>;
+}
+
 function Home({ data }) {
   const settings = officialSettings(data.settings || {});
   const home = officialPage(data.pages?.home || {}, 'home');
@@ -165,13 +202,14 @@ function Home({ data }) {
     </section>
     <section className="home-strip services-strip"><div className="strip-title"><span>Principais Serviços</span><h2>Atuação no setor sucroalcooleiro</h2><a href="/servicos">Ver todos <ChevronRight size={16} /></a></div><div className="service-row">{services.slice(0, 6).map((item) => <ServiceCard item={item} key={item.id} />)}</div></section>
     <section className="home-strip portfolio-strip"><div className="strip-title"><span>Produtos</span><h2>Equipamentos para usinas</h2><a href="/portfolio">Ver produtos <ChevronRight size={16} /></a></div><div className="portfolio-row">{portfolio.slice(0, 6).map((item) => <PortfolioCard item={item} key={item.id} />)}</div></section>
-    <section className="quick-links" style={{ backgroundImage: `linear-gradient(90deg,rgba(4,14,24,.94),rgba(8,31,52,.92)),url(${footerImage})` }}><a href="/videos"><PlayCircle /><b>Vídeos</b><small>Projetos, processos e bastidores das operações.</small></a><a href="/galeria"><ImagePlus /><b>Galeria</b><small>Fotos de obras, fabricação e montagem industrial.</small></a><a href={whatsappUrl(settings)} target="_blank" rel="noreferrer"><UserCircle /><b>Orçamento</b><small>Fale com a equipe técnica da IMEC pelo WhatsApp.</small></a></section>
+    <section className="quick-links" style={{ backgroundImage: `linear-gradient(90deg,rgba(4,14,24,.94),rgba(8,31,52,.92)),url(${footerImage})` }}><a href="/produtos"><Factory /><b>Produtos</b><small>Equipamentos para usinas, destilação e tratamento de fuligem.</small></a><a href="/setores"><Building2 /><b>Setores</b><small>Etanol, açúcar, energia e indústria alimentícia.</small></a><a href={whatsappUrl(settings)} target="_blank" rel="noreferrer"><UserCircle /><b>Orçamento</b><small>Fale com a equipe técnica da IMEC pelo WhatsApp.</small></a></section>
+    <section className="overview-band"><div><span>Referência nacional</span><h2>Mais de 100 usinas atendidas</h2><p>A IMEC reúne experiência no setor sucroalcooleiro, comunicação direta com o cliente e acompanhamento de performance após a entrega.</p></div><div className="overview-grid">{differentials.map((item) => <InfoCard key={item.title} {...item} />)}</div></section>
   </>;
 }
 
 function About({ data }) {
   const about = officialPage(data.pages?.['quem-somos'] || {}, 'quem-somos');
-  return <><PageTitle eyebrow="Quem Somos" title={about.title || 'Desde 1998 atendendo o setor sucroalcooleiro'} text={about.subtitle || 'Sediada em Sud Mennucci-SP, a IMEC atua com fabricação, montagem e manutenção de equipamentos para etanol, açúcar e energia.'} /><section className="content-split"><h2>IMEC Metalúrgica</h2><p>{about.content || 'A IMEC surgiu da união dos diretores Edson Ribeiro e José Della Possa, ambos com extensa experiência no setor sucroalcooleiro. A empresa iniciou suas atividades fabricando, montando e mantendo colunas de destilação, pré-evaporadores, tanques, trocadores de calor e outros equipamentos industriais. Ao longo da sua trajetória, consolidou-se como referência nacional, atendendo mais de 100 usinas de açúcar e álcool e empresas da indústria alimentícia.'}</p><div className="pillars"><article><Award /><b>Missão</b><span>Oferecer a melhor e mais completa solução em produtos e serviços para desenvolver e aprimorar o cenário energético brasileiro.</span></article><article><ShieldCheck /><b>Valores</b><span>Superar expectativas, valorizar colaboradores, respeitar clientes e celebrar vitórias com todos que fizeram parte delas.</span></article><article><FileText /><b>Visão</b><span>Expandir em tamanho e variedade de serviços para ser parte fundamental da transformação energética brasileira.</span></article></div></section></>;
+  return <><PageTitle eyebrow="Empresa" title={about.title || 'Desde 1998 atendendo o setor sucroalcooleiro'} text={about.subtitle || 'Sediada em Sud Mennucci-SP, a IMEC atua com fabricação, montagem e manutenção de equipamentos para etanol, açúcar e energia.'} /><section className="content-split"><h2>IMEC Metalúrgica</h2><p>{about.content || 'A IMEC surgiu da união dos diretores Edson Ribeiro e José Della Possa, ambos com extensa experiência no setor sucroalcooleiro. A empresa iniciou suas atividades fabricando, montando e mantendo colunas de destilação, pré-evaporadores, tanques, trocadores de calor e outros equipamentos industriais. Ao longo da sua trajetória, consolidou-se como referência nacional, atendendo mais de 100 usinas de açúcar e álcool e empresas da indústria alimentícia.'}</p><div className="pillars"><article><Award /><b>Missão</b><span>Oferecer a melhor e mais completa solução em produtos e serviços para desenvolver e aprimorar o cenário energético brasileiro.</span></article><article><ShieldCheck /><b>Valores</b><span>Superar expectativas, valorizar colaboradores, respeitar clientes e celebrar vitórias com todos que fizeram parte delas.</span></article><article><FileText /><b>Visão</b><span>Expandir em tamanho e variedade de serviços para ser parte fundamental da transformação energética brasileira.</span></article></div></section><section className="timeline-section"><h2>Nossa História</h2><div>{timeline.map(([year, text]) => <article key={year}><b>{year}</b><p>{text}</p></article>)}</div></section></>;
 }
 
 function Services({ data }) {
@@ -182,6 +220,23 @@ function Services({ data }) {
 function Portfolio({ data }) {
   const portfolio = officialPortfolio(data.portfolio || []);
   return <><PageTitle eyebrow="Produtos" title="Equipamentos e soluções para o setor sucroalcooleiro" text="Concentrador de levedura, decantador de fuligem, colunas de destilação, pré-evaporadores, tanques, trocadores de calor e plantas industriais." /><section className="page-grid portfolio-grid">{portfolio.map((item) => <PortfolioCard item={item} key={item.id} />)}</section></>;
+}
+
+function Products({ data }) {
+  const products = officialPortfolio(data.portfolio || []);
+  return <><PageTitle eyebrow="Produtos e Equipamentos" title="Soluções para etanol, açúcar e energia" text="Produtos e equipamentos para usinas, processos de destilação, secagem de leveduras, tratamento de fuligem e plantas industriais." /><section className="product-list">{products.map((item) => <article key={item.id}><img src={assetUrl(item.cover_image_url || item.image_url)} alt={item.title} /><div><span>{item.category}</span><h3>{item.title}</h3><p>{item.description || item.short_description || 'Solução industrial desenvolvida para atender demandas do setor sucroalcooleiro.'}</p><a href="/contato">Solicitar informações <ChevronRight size={16} /></a></div></article>)}</section></>;
+}
+
+function Sectors() {
+  return <><PageTitle eyebrow="Setores" title="Mercados atendidos pela IMEC" text="Atuação voltada ao setor sucroalcooleiro, energia, plantas industriais e indústria alimentícia." /><section className="page-grid service-grid">{sectors.map((title, index) => <InfoCard key={title} icon={[Factory, Gauge, Building2, Settings, Wrench, HardHat][index % 6]} title={title} text="Soluções técnicas, equipamentos e serviços para operação, manutenção e melhoria de processos industriais." />)}</section></>;
+}
+
+function Clients() {
+  return <><PageTitle eyebrow="Clientes" title="Experiência com mais de 100 usinas" text="A IMEC construiu sua trajetória atendendo usinas de açúcar e álcool e empresas da indústria alimentícia em projetos, equipamentos e serviços especializados." /><section className="client-section"><div>{clients.map((item) => <article key={item}><Users /><p>{item}</p></article>)}</div><aside><h2>Relacionamento técnico</h2><p>O diferencial da IMEC está na proximidade com o cliente: comunicação direta com o responsável pelo projeto e acompanhamento de performance após a entrega.</p><a className="btn primary" href="/contato">Falar com a IMEC <ChevronRight size={16} /></a></aside></section></>;
+}
+
+function WorkWithUs() {
+  return <><PageTitle eyebrow="Trabalhe Conosco" title="Envie seu currículo para a IMEC" text="No momento a empresa pode não ter vagas abertas, mas mantém banco de currículos para futuras oportunidades." /><section className="contact-page work-page"><div><span>Banco de talentos</span><h1>Faça parte da nossa história</h1><p>A IMEC valoriza o tempo e dedicação de seus colaboradores. Envie suas informações para que a equipe possa considerar seu perfil em novas oportunidades.</p><p><Mail size={17} /> {DEFAULT_EMAIL}</p><p><Briefcase size={17} /> Sud Mennucci - SP</p></div><form onSubmit={(event) => { event.preventDefault(); window.location.href = `mailto:${DEFAULT_EMAIL}?subject=${encodeURIComponent('Currículo - Banco de Talentos IMEC')}`; }}><input placeholder="Nome" required /><input placeholder="Telefone / WhatsApp" required /><input placeholder="E-mail" required /><textarea placeholder="Área de interesse ou breve apresentação" required /><button className="btn primary">Enviar por e-mail</button></form></section></>;
 }
 
 function Gallery({ data }) {
@@ -225,10 +280,28 @@ function PublicSite() {
   const [data, setData] = useState({ settings: {}, pages: {}, services: [], portfolio: [], photos: [], videos: [] });
   useEffect(() => { api('/public/bootstrap').then(setData).catch(() => {}); }, []);
   const current = window.location.pathname.replace(/\/$/, '') || '/';
+  useEffect(() => {
+    const titles = {
+      '/': 'IMEC Metalúrgica - Etanol, açúcar e energia',
+      '/quem-somos': 'Empresa - IMEC Metalúrgica',
+      '/servicos': 'Serviços - IMEC Metalúrgica',
+      '/produtos': 'Produtos e Equipamentos - IMEC Metalúrgica',
+      '/portfolio': 'Produtos e Equipamentos - IMEC Metalúrgica',
+      '/setores': 'Setores atendidos - IMEC Metalúrgica',
+      '/clientes': 'Clientes - IMEC Metalúrgica',
+      '/trabalhe-conosco': 'Trabalhe Conosco - IMEC Metalúrgica',
+      '/contato': 'Contato - IMEC Metalúrgica',
+    };
+    document.title = titles[current] || titles['/'];
+  }, [current]);
   const page = useMemo(() => {
     if (current === '/quem-somos') return <About data={data} />;
     if (current === '/servicos') return <Services data={data} />;
     if (current === '/portfolio') return <Portfolio data={data} />;
+    if (current === '/produtos') return <Products data={data} />;
+    if (current === '/setores') return <Sectors />;
+    if (current === '/clientes') return <Clients />;
+    if (current === '/trabalhe-conosco') return <WorkWithUs />;
     if (current === '/galeria') return <Gallery data={data} />;
     if (current === '/videos') return <Videos data={data} />;
     if (current === '/contato') return <Contact data={data} />;
