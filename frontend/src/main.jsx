@@ -120,6 +120,13 @@ const differentials = [
   { icon: FileText, title: 'Fornecedor BNDES', text: 'Empresa cadastrada como fornecedora de produtos e serviços pelo BNDES.' },
 ];
 
+const impactMetrics = [
+  ['100+', 'usinas atendidas'],
+  ['1998', 'ano de fundação'],
+  ['5.000m²', 'nova área fabril'],
+  ['24+', 'anos de história'],
+];
+
 function officialSettings(settings = {}) {
   const oldPhone = !settings.phone || settings.phone.includes('(47)');
   return oldPhone
@@ -190,6 +197,10 @@ function InfoCard({ icon: Icon = FileText, title, text }) {
   return <article className="info-card"><Icon /><h3>{title}</h3><p>{text}</p></article>;
 }
 
+function ImpactStrip() {
+  return <section className="impact-strip">{impactMetrics.map(([value, label]) => <article key={label}><strong>{value}</strong><span>{label}</span></article>)}</section>;
+}
+
 function Home({ data }) {
   const settings = officialSettings(data.settings || {});
   const home = officialPage(data.pages?.home || {}, 'home');
@@ -200,6 +211,7 @@ function Home({ data }) {
       <div className="hero-copy"><span>IMEC Metalúrgica</span><h1>{home.title || 'Soluções completas para projetos e equipamentos industriais'}</h1><p>{home.subtitle || 'Equipamentos e serviços para fabricação de etanol, açúcar e energia, com referência nacional em mais de 100 usinas de açúcar e álcool e na indústria alimentícia.'}</p><div className="hero-actions"><a className="btn primary" href={whatsappUrl(settings)} target="_blank" rel="noreferrer">Solicitar Orçamento <ChevronRight size={18} /></a><a className="btn outline" href="/servicos">Ver Serviços <ChevronRight size={18} /></a></div></div>
       <aside className="badges"><article><Award /><b>Acompanhamento de Performance</b><small>Suporte após a entrega para eficiência e qualidade.</small></article><article><ShieldCheck /><b>Comunicação Direta</b><small>Contato acessível com o responsável pelo projeto.</small></article><article><Settings /><b>Fornecedor BNDES</b><small>Empresa cadastrada como fornecedora de produtos e serviços.</small></article></aside>
     </section>
+    <ImpactStrip />
     <section className="home-strip services-strip"><div className="strip-title"><span>Principais Serviços</span><h2>Atuação no setor sucroalcooleiro</h2><a href="/servicos">Ver todos <ChevronRight size={16} /></a></div><div className="service-row">{services.slice(0, 6).map((item) => <ServiceCard item={item} key={item.id} />)}</div></section>
     <section className="home-strip portfolio-strip"><div className="strip-title"><span>Produtos</span><h2>Equipamentos para usinas</h2><a href="/portfolio">Ver produtos <ChevronRight size={16} /></a></div><div className="portfolio-row">{portfolio.slice(0, 6).map((item) => <PortfolioCard item={item} key={item.id} />)}</div></section>
     <section className="quick-links" style={{ backgroundImage: `linear-gradient(90deg,rgba(4,14,24,.94),rgba(8,31,52,.92)),url(${footerImage})` }}><a href="/produtos"><Factory /><b>Produtos</b><small>Equipamentos para usinas, destilação e tratamento de fuligem.</small></a><a href="/setores"><Building2 /><b>Setores</b><small>Etanol, açúcar, energia e indústria alimentícia.</small></a><a href={whatsappUrl(settings)} target="_blank" rel="noreferrer"><UserCircle /><b>Orçamento</b><small>Fale com a equipe técnica da IMEC pelo WhatsApp.</small></a></section>
@@ -280,6 +292,20 @@ function PublicSite() {
   const [data, setData] = useState({ settings: {}, pages: {}, services: [], portfolio: [], photos: [], videos: [] });
   useEffect(() => { api('/public/bootstrap').then(setData).catch(() => {}); }, []);
   const current = window.location.pathname.replace(/\/$/, '') || '/';
+  useEffect(() => {
+    const targets = document.querySelectorAll('.home-strip,.quick-links,.overview-band,.page-grid,.gallery-grid,.video-grid,.content-split,.timeline-section,.product-list,.client-section,.contact-page,.service-card,.portfolio-card,.info-card,.impact-strip article');
+    targets.forEach((target) => target.classList.add('reveal'));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    targets.forEach((target) => observer.observe(target));
+    return () => observer.disconnect();
+  }, [current, data]);
   useEffect(() => {
     const titles = {
       '/': 'IMEC Metalúrgica - Etanol, açúcar e energia',
