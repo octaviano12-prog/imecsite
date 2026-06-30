@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Catalogo IMEC Metalurgica</title>
+    <style>
+      :root { color-scheme: dark; --bg:#04101c; --panel:#0d2033; --line:#27415d; --blue:#2f91ff; --text:#f3f7ff; --muted:#b7c7dc; }
+      * { box-sizing: border-box; }
+      body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: var(--text); }
+      main { max-width: 1080px; margin: 0 auto; padding: 44px 24px; }
+      header { display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; border-bottom: 1px solid var(--line); padding-bottom: 28px; }
+      .logo { display: flex; gap: 14px; align-items: center; }
+      .mark { width: 54px; height: 54px; display:grid; place-items:center; background: linear-gradient(145deg,#d7e9ff,#1d74d8); color:#06111c; font-weight:900; border-radius: 8px; font-size: 28px; }
+      h1 { margin: 18px 0 10px; font-size: clamp(34px, 6vw, 64px); line-height: .95; }
+      h2 { margin: 0 0 12px; font-size: 26px; }
+      p { color: var(--muted); line-height: 1.55; }
+      .hero { padding: 44px 0; display: grid; grid-template-columns: 1.2fr .8fr; gap: 30px; align-items: center; }
+      .metrics, .grid { display:grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+      .metrics article, .grid article, .contact { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 20px; }
+      .metrics b { display:block; color: var(--blue); font-size: 32px; }
+      .grid { grid-template-columns: repeat(3, 1fr); margin-top: 18px; }
+      .grid b { display:block; margin-bottom: 8px; font-size: 18px; }
+      section { margin-top: 34px; }
+      .contact { display:grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+      a { color: #7db8ff; font-weight: 800; }
+      .print { display:inline-flex; background: var(--blue); color: white; text-decoration:none; padding: 14px 18px; border-radius: 6px; }
+      @media print { body { background: white; color: #111827; } p { color: #374151; } .metrics article, .grid article, .contact { border-color:#cbd5e1; background:white; } .print { display:none; } }
+      @media (max-width: 760px) { header, .hero, .contact { grid-template-columns:1fr; } .metrics, .grid { grid-template-columns:1fr; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="logo"><span class="mark">I</span><div><strong>IMEC Metalurgica</strong><p>Solucoes industriais com engenharia, tecnologia e confianca.</p></div></div>
+        <a class="print" href="#" onclick="window.print()">Imprimir / salvar PDF</a>
+      </header>
+      <section class="hero">
+        <div>
+          <h1>Equipamentos e servicos para usinas, etanol, acucar e energia</h1>
+          <p>A IMEC atua desde 1998 com fabricacao, montagem, manutencao, suporte tecnico, projetos e equipamentos para processos industriais.</p>
+        </div>
+        <div class="metrics">
+          <article><b>100+</b><span>usinas atendidas</span></article>
+          <article><b>1998</b><span>fundacao</span></article>
+          <article><b>5.000m2</b><span>area fabril</span></article>
+          <article><b>BNDES</b><span>fornecedor cadastrado</span></article>
+        </div>
+      </section>
+      <section>
+        <h2>Servicos</h2>
+        <div class="grid">
+          <article><b>Montagem Industrial</b><p>Montagem de equipamentos, plantas e conjuntos para usinas e processos industriais.</p></article>
+          <article><b>Suporte Tecnico</b><p>Acompanhamento antes, durante e depois da entrega dos projetos e equipamentos.</p></article>
+          <article><b>Manutencao</b><p>Reforma e manutencao de colunas, pre-evaporadores, tanques e trocadores de calor.</p></article>
+          <article><b>Projetos</b><p>Solucoes completas para fabricacao, montagem e melhoria de processos industriais.</p></article>
+          <article><b>Guinchos e Munks</b><p>Apoio para icamento, movimentacao e montagem de equipamentos em campo.</p></article>
+          <article><b>Equipamentos</b><p>Produtos para etanol, acucar, energia, destilacao e tratamento de fuligem.</p></article>
+        </div>
+      </section>
+      <section>
+        <h2>Produtos em destaque</h2>
+        <div class="grid">
+          <article><b>Concentrador de Levedura</b><p>Aplicado em processos de etanol e destilarias.</p></article>
+          <article><b>Decantador de Fuligem</b><p>Tratamento de fuligem de caldeira e utilidades industriais.</p></article>
+          <article><b>Colunas de Destilacao</b><p>Etanol combustivel, neutro e especial.</p></article>
+          <article><b>Pre-evaporadores e Tanques</b><p>Fabricacao, montagem e manutencao.</p></article>
+          <article><b>Trocadores de Calor</b><p>Equipamentos industriais sob projeto.</p></article>
+          <article><b>Plantas para Usinas</b><p>Solucoes integradas para etanol, acucar e energia.</p></article>
+        </div>
+      </section>
+      <section class="contact">
+        <div>
+          <h2>Contato</h2>
+          <p>Telefone: (18) 3786-1272<br />E-mail: comercial@imecmetalurgica.com.br<br />Endereco: Rua Julio Ventura, 655 - Sud Mennucci, SP</p>
+        </div>
+        <div>
+          <h2>Atendimento</h2>
+          <p>Fale com a equipe tecnica para avaliar sua necessidade, produto, manutencao ou projeto industrial.</p>
+          <a href="https://wa.me/551837861272">Chamar no WhatsApp</a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

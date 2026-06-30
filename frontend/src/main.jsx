@@ -127,6 +127,78 @@ const impactMetrics = [
   ['24+', 'anos de história'],
 ];
 
+const serviceDetails = {
+  'montagem-industrial': {
+    description: 'Planejamento, fabricacao e montagem de equipamentos, tubulacoes, estruturas e plantas industriais para operacoes sucroalcooleiras, energia e utilidades.',
+    bullets: ['Montagem de equipamentos em campo', 'Integracao com processos existentes', 'Equipe tecnica para paradas e ampliacoes', 'Acompanhamento ate a entrega operacional']
+  },
+  'suporte-tecnico': {
+    description: 'Apoio tecnico proximo ao cliente, com orientacao para instalacao, partida, operacao, ajustes e acompanhamento de performance dos equipamentos.',
+    bullets: ['Contato direto com responsaveis tecnicos', 'Suporte antes, durante e depois da entrega', 'Analise de desempenho em operacao', 'Recomendacoes para melhoria do processo']
+  },
+  'manutencao-de-equipamentos': {
+    description: 'Manutencao, reforma e melhoria de equipamentos industriais como colunas, tanques, pre-evaporadores, trocadores de calor e conjuntos para usinas.',
+    bullets: ['Reformas programadas', 'Inspecao e recuperacao de componentes', 'Solucoes para reduzir paradas', 'Intervencoes em equipamentos criticos']
+  },
+  'projetos': {
+    description: 'Desenvolvimento de solucoes industriais sob medida, conectando engenharia, fabricacao e montagem para demandas especificas de processo.',
+    bullets: ['Estudo da necessidade do cliente', 'Projeto alinhado a fabricacao', 'Documentacao tecnica para execucao', 'Solucoes para ampliacao e modernizacao']
+  },
+  'locacao-de-guinchos-e-munks': {
+    description: 'Apoio para icamento, movimentacao e montagem de equipamentos industriais, com foco em seguranca, planejamento e produtividade em campo.',
+    bullets: ['Movimentacao de cargas industriais', 'Apoio em montagens e paradas', 'Planejamento de icamento', 'Operacao voltada a seguranca']
+  },
+  'equipamentos-para-usinas': {
+    description: 'Linha de produtos e equipamentos para usinas de etanol, acucar e energia, com fabricacao, montagem e acompanhamento de desempenho.',
+    bullets: ['Equipamentos para destilacao', 'Tratamento de fuligem de caldeira', 'Secagem e concentracao de levedura', 'Tanques, trocadores e plantas industriais']
+  }
+};
+
+const productDetails = {
+  'concentrador-de-levedura': {
+    description: 'Equipamento voltado ao processo de concentracao de levedura, desenvolvido para ganho operacional e aplicacao em usinas e destilarias.',
+    bullets: ['Aplicado em processos de etanol', 'Projeto industrial robusto', 'Fabricacao e suporte IMEC', 'Acompanhamento tecnico de performance']
+  },
+  'decantador-de-fuligem': {
+    description: 'Solucao para tratamento de fuligem de caldeira, contribuindo para controle operacional, limpeza do processo e melhoria da rotina industrial.',
+    bullets: ['Tratamento de residuos de caldeira', 'Projeto para operacao continua', 'Integracao com utilidades industriais', 'Fabricacao sob demanda']
+  },
+  'colunas-de-destilacao': {
+    description: 'Colunas para fabricacao de etanol combustivel, neutro e especial, area em que a IMEC construiu forte historico no setor sucroalcooleiro.',
+    bullets: ['Etanol combustivel, neutro e especial', 'Fabricacao de grande porte', 'Montagem e manutencao', 'Experiencia desde o inicio da empresa']
+  },
+  'pre-evaporadores-e-tanques': {
+    description: 'Fabricacao, montagem e manutencao de pre-evaporadores, tanques e conjuntos industriais para processos de usinas e plantas energeticas.',
+    bullets: ['Equipamentos para processos industriais', 'Montagem em campo', 'Reforma e manutencao', 'Solucoes sob medida']
+  },
+  'trocadores-de-calor': {
+    description: 'Trocadores de calor para operacoes industriais que exigem confiabilidade, resistencia e atendimento tecnico alinhado ao processo.',
+    bullets: ['Equipamentos industriais sob projeto', 'Fabricacao e montagem', 'Manutencao e reforma', 'Suporte para aplicacao em processo']
+  },
+  'plantas-para-usinas': {
+    description: 'Solucoes para plantas industriais de etanol, acucar e energia, reunindo engenharia, fabricacao, montagem e acompanhamento tecnico.',
+    bullets: ['Projetos para usinas', 'Equipamentos integrados', 'Montagem industrial', 'Suporte de performance']
+  }
+};
+
+function slugifyTitle(value = '') {
+  return String(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+function enrichService(item = {}) {
+  const slug = item.slug || slugifyTitle(item.title);
+  return { ...item, slug, ...(serviceDetails[slug] || {}) };
+}
+
+function enrichProduct(item = {}) {
+  const slug = item.slug || slugifyTitle(item.title);
+  return { ...item, slug, ...(productDetails[slug] || {}) };
+}
+
+function mapsUrl(settings = {}) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(settings.address || DEFAULT_ADDRESS)}`;
+}
+
 function officialSettings(settings = {}) {
   const oldPhone = !settings.phone || settings.phone.includes('(47)');
   return oldPhone
@@ -136,12 +208,14 @@ function officialSettings(settings = {}) {
 
 function officialServices(items = []) {
   const hasOldTemplate = items.some((item) => ['Caldeiraria', 'Soldagem Industrial', 'NR-13', 'Rigging'].includes(item.title));
-  return items.length && !hasOldTemplate ? items : fallbackServices;
+  const source = items.length && !hasOldTemplate ? items : fallbackServices;
+  return source.map(enrichService);
 }
 
 function officialPortfolio(items = []) {
   const hasOldTemplate = items.some((item) => ['Vasos de Pressão', 'Tubulações Industriais', 'Estruturas Metálicas'].includes(item.title));
-  return items.length && !hasOldTemplate ? items : fallbackPortfolio;
+  const source = items.length && !hasOldTemplate ? items : fallbackPortfolio;
+  return source.map(enrichProduct);
 }
 
 function officialPage(page = {}, slug) {
@@ -186,11 +260,11 @@ function PageTitle({ eyebrow, title, text }) {
 
 function ServiceCard({ item }) {
   const Icon = iconMap[item.icon] || Factory;
-  return <article className="service-card"><Icon /><h3>{item.title}</h3><p>{item.short_description}</p></article>;
+  return <article className="service-card"><Icon /><h3>{item.title}</h3><p>{item.short_description}</p><a className="card-link" href={`/servicos/${item.slug || slugifyTitle(item.title)}`}>Ver detalhes <ChevronRight size={15} /></a></article>;
 }
 
 function PortfolioCard({ item }) {
-  return <article className="portfolio-card" style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.86)), url(${assetUrl(item.cover_image_url || item.image_url)})` }}><strong>{item.title}</strong><span>{item.category || item.short_description || 'Obra industrial'}</span></article>;
+  return <article className="portfolio-card" style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.86)), url(${assetUrl(item.cover_image_url || item.image_url)})` }}><strong>{item.title}</strong><span>{item.category || item.short_description || 'Obra industrial'}</span><a href={`/produtos/${item.slug || slugifyTitle(item.title)}`}>Detalhes <ChevronRight size={14} /></a></article>;
 }
 
 function InfoCard({ icon: Icon = FileText, title, text }) {
@@ -199,6 +273,10 @@ function InfoCard({ icon: Icon = FileText, title, text }) {
 
 function ImpactStrip() {
   return <section className="impact-strip">{impactMetrics.map(([value, label]) => <article key={label}><strong>{value}</strong><span>{label}</span></article>)}</section>;
+}
+
+function CatalogCta({ settings }) {
+  return <section className="catalog-cta"><div><span>Catalogo tecnico</span><h2>Produtos, servicos e aplicacoes em um material comercial</h2><p>Abra o catalogo digital da IMEC para apresentar rapidamente a empresa, linha de produtos, atuacao em usinas e canais de contato.</p></div><div><a className="btn primary" href="/catalogo-imec.html" target="_blank" rel="noreferrer"><Download size={17} /> Abrir catalogo</a><a className="btn outline" href={whatsappUrl(settings, 'Ola! Gostaria de receber o catalogo e falar sobre uma solucao da IMEC Metalurgica.')} target="_blank" rel="noreferrer"><MessageCircle size={17} /> Receber no WhatsApp</a></div></section>;
 }
 
 function Home({ data }) {
@@ -212,6 +290,7 @@ function Home({ data }) {
       <aside className="badges"><article><Award /><b>Acompanhamento de Performance</b><small>Suporte após a entrega para eficiência e qualidade.</small></article><article><ShieldCheck /><b>Comunicação Direta</b><small>Contato acessível com o responsável pelo projeto.</small></article><article><Settings /><b>Fornecedor BNDES</b><small>Empresa cadastrada como fornecedora de produtos e serviços.</small></article></aside>
     </section>
     <ImpactStrip />
+    <CatalogCta settings={settings} />
     <section className="home-strip services-strip"><div className="strip-title"><span>Principais Serviços</span><h2>Atuação no setor sucroalcooleiro</h2><a href="/servicos">Ver todos <ChevronRight size={16} /></a></div><div className="service-row">{services.slice(0, 6).map((item) => <ServiceCard item={item} key={item.id} />)}</div></section>
     <section className="home-strip portfolio-strip"><div className="strip-title"><span>Produtos</span><h2>Equipamentos para usinas</h2><a href="/portfolio">Ver produtos <ChevronRight size={16} /></a></div><div className="portfolio-row">{portfolio.slice(0, 6).map((item) => <PortfolioCard item={item} key={item.id} />)}</div></section>
     <section className="quick-links" style={{ backgroundImage: `linear-gradient(90deg,rgba(4,14,24,.94),rgba(8,31,52,.92)),url(${footerImage})` }}><a href="/produtos"><Factory /><b>Produtos</b><small>Equipamentos para usinas, destilação e tratamento de fuligem.</small></a><a href="/setores"><Building2 /><b>Setores</b><small>Etanol, açúcar, energia e indústria alimentícia.</small></a><a href={whatsappUrl(settings)} target="_blank" rel="noreferrer"><UserCircle /><b>Orçamento</b><small>Fale com a equipe técnica da IMEC pelo WhatsApp.</small></a></section>
@@ -251,6 +330,22 @@ function WorkWithUs() {
   return <><PageTitle eyebrow="Trabalhe Conosco" title="Envie seu currículo para a IMEC" text="No momento a empresa pode não ter vagas abertas, mas mantém banco de currículos para futuras oportunidades." /><section className="contact-page work-page"><div><span>Banco de talentos</span><h1>Faça parte da nossa história</h1><p>A IMEC valoriza o tempo e dedicação de seus colaboradores. Envie suas informações para que a equipe possa considerar seu perfil em novas oportunidades.</p><p><Mail size={17} /> {DEFAULT_EMAIL}</p><p><Briefcase size={17} /> Sud Mennucci - SP</p></div><form onSubmit={(event) => { event.preventDefault(); window.location.href = `mailto:${DEFAULT_EMAIL}?subject=${encodeURIComponent('Currículo - Banco de Talentos IMEC')}`; }}><input placeholder="Nome" required /><input placeholder="Telefone / WhatsApp" required /><input placeholder="E-mail" required /><textarea placeholder="Área de interesse ou breve apresentação" required /><button className="btn primary">Enviar por e-mail</button></form></section></>;
 }
 
+function DetailPage({ eyebrow, item, settings, backHref }) {
+  return <><PageTitle eyebrow={eyebrow} title={item.title} text={item.category || item.short_description} /><section className="detail-page"><div className="detail-media"><img src={assetUrl(item.cover_image_url || item.image_url || heroImage)} alt={item.title} loading="lazy" decoding="async" /></div><div className="detail-copy"><span>Aplicacao IMEC</span><h2>Solucao tecnica para operacao industrial</h2><p>{item.description || item.short_description || 'Solucao industrial desenvolvida para atender demandas do setor sucroalcooleiro, energia e industria alimenticia.'}</p><ul>{(item.bullets || ['Projeto sob medida', 'Fabricacao e montagem', 'Suporte tecnico', 'Acompanhamento de performance']).map((bullet) => <li key={bullet}><ShieldCheck size={17} /> {bullet}</li>)}</ul><div className="detail-actions"><a className="btn primary" href={whatsappUrl(settings, `Ola! Quero falar sobre ${item.title} da IMEC Metalurgica.`)} target="_blank" rel="noreferrer"><MessageCircle size={17} /> Solicitar atendimento</a><a className="btn outline" href={backHref}>Voltar</a></div></div><aside className="detail-aside"><b>Precisa apresentar internamente?</b><p>Use o catalogo digital para compartilhar rapidamente as solucoes, produtos e contatos da IMEC.</p><a href="/catalogo-imec.html" target="_blank" rel="noreferrer"><Download size={16} /> Abrir catalogo</a></aside></section></>;
+}
+
+function ServiceDetail({ data, slug }) {
+  const settings = officialSettings(data.settings || {});
+  const item = officialServices(data.services || []).find((service) => service.slug === slug);
+  return item ? <DetailPage eyebrow="Servico" item={item} settings={settings} backHref="/servicos" /> : <Services data={data} />;
+}
+
+function ProductDetail({ data, slug }) {
+  const settings = officialSettings(data.settings || {});
+  const item = officialPortfolio(data.portfolio || []).find((product) => product.slug === slug);
+  return item ? <DetailPage eyebrow="Produto" item={item} settings={settings} backHref="/produtos" /> : <Products data={data} />;
+}
+
 function Gallery({ data }) {
   const photos = data.photos?.length ? data.photos : fallbackServices;
   return <><PageTitle eyebrow="Galeria" title="Estrutura, fabricação e montagem industrial" text="Registros de equipamentos, obras e processos ligados às usinas de açúcar, álcool, energia e indústria alimentícia." /><section className="gallery-grid">{photos.map((photo) => <figure key={photo.id}><img src={assetUrl(photo.image_url)} alt={photo.alt_text || photo.title} /><figcaption>{photo.title}</figcaption></figure>)}</section></>;
@@ -288,12 +383,17 @@ function Contact({ data }) {
   return <section className="contact-page"><div><span>Solicitar Orçamento</span><h1>Fale com a IMEC sobre sua usina ou projeto industrial</h1><p>Entre em contato para montagem industrial, suporte técnico, manutenção de equipamentos, projetos, locação de guinchos e munks, ou produtos para etanol, açúcar e energia.</p><p><Phone size={17} /> {settings.phone || DEFAULT_PHONE}</p><p><Mail size={17} /> {settings.email || DEFAULT_EMAIL}</p><p><MapPin size={17} /> {settings.address || DEFAULT_ADDRESS}</p><div className="contact-stats"><article><b>100+</b><small>usinas atendidas</small></article><article><b>1998</b><small>início das atividades</small></article><article><b>BNDES</b><small>fornecedor cadastrado</small></article></div></div><form onSubmit={submit}>{['name', 'company', 'email', 'phone'].map((key) => <input key={key} placeholder={{ name: 'Nome', company: 'Empresa', email: 'E-mail', phone: 'Telefone / WhatsApp' }[key]} value={quote[key]} onChange={(e) => setQuote({ ...quote, [key]: e.target.value })} required={key !== 'company'} />)}<select value={quote.service_interest} onChange={(e) => setQuote({ ...quote, service_interest: e.target.value })}><option value="">Serviço de interesse</option>{services.map((item) => <option key={item.id}>{item.title}</option>)}</select><textarea placeholder="Descreva sua necessidade" value={quote.message} onChange={(e) => setQuote({ ...quote, message: e.target.value })} required /><button className="btn primary">Enviar pelo WhatsApp</button>{sent && <p className="ok">{sent}</p>}</form></section>;
 }
 
+function MapLocation({ data }) {
+  const settings = officialSettings(data.settings || {});
+  return <section className="map-card"><div><span>Localizacao</span><h2>Sud Mennucci - Sao Paulo</h2><p>{settings.address || DEFAULT_ADDRESS}</p><a className="btn outline" href={mapsUrl(settings)} target="_blank" rel="noreferrer"><MapPin size={17} /> Abrir no Google Maps</a></div><aside><MapPin size={48} /><b>Atendimento nacional</b><small>Base industrial em Sud Mennucci-SP e experiencia com mais de 100 usinas de acucar e alcool.</small></aside></section>;
+}
+
 function PublicSite() {
   const [data, setData] = useState({ settings: {}, pages: {}, services: [], portfolio: [], photos: [], videos: [] });
   useEffect(() => { api('/public/bootstrap').then(setData).catch(() => {}); }, []);
   const current = window.location.pathname.replace(/\/$/, '') || '/';
   useEffect(() => {
-    const targets = document.querySelectorAll('.home-strip,.quick-links,.overview-band,.page-grid,.gallery-grid,.video-grid,.content-split,.timeline-section,.product-list,.client-section,.contact-page,.service-card,.portfolio-card,.info-card,.impact-strip article');
+    const targets = document.querySelectorAll('.home-strip,.quick-links,.overview-band,.page-grid,.gallery-grid,.video-grid,.content-split,.timeline-section,.product-list,.client-section,.contact-page,.service-card,.portfolio-card,.info-card,.impact-strip article,.catalog-cta,.detail-page');
     targets.forEach((target) => target.classList.add('reveal'));
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -318,9 +418,19 @@ function PublicSite() {
       '/trabalhe-conosco': 'Trabalhe Conosco - IMEC Metalúrgica',
       '/contato': 'Contato - IMEC Metalúrgica',
     };
-    document.title = titles[current] || titles['/'];
+    document.title = titles[current] || (current.startsWith('/servicos/') ? 'Servico - IMEC Metalurgica' : current.startsWith('/produtos/') ? 'Produto - IMEC Metalurgica' : titles['/']);
+    const description = 'IMEC Metalurgica: solucoes industriais, montagem, manutencao, projetos e equipamentos para usinas de etanol, acucar e energia.';
+    let meta = document.querySelector('meta[name="description"]');
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.setAttribute('name', 'description');
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute('content', description);
   }, [current]);
   const page = useMemo(() => {
+    if (current.startsWith('/servicos/')) return <ServiceDetail data={data} slug={current.replace('/servicos/', '')} />;
+    if (current.startsWith('/produtos/')) return <ProductDetail data={data} slug={current.replace('/produtos/', '')} />;
     if (current === '/quem-somos') return <About data={data} />;
     if (current === '/servicos') return <Services data={data} />;
     if (current === '/portfolio') return <Portfolio data={data} />;
@@ -330,10 +440,11 @@ function PublicSite() {
     if (current === '/trabalhe-conosco') return <WorkWithUs />;
     if (current === '/galeria') return <Gallery data={data} />;
     if (current === '/videos') return <Videos data={data} />;
-    if (current === '/contato') return <Contact data={data} />;
+    if (current === '/contato') return <><Contact data={data} /><MapLocation data={data} /></>;
     return <Home data={data} />;
   }, [current, data]);
-  return <><Header settings={officialSettings(data.settings || {})} current={current} /><main>{page}</main><Footer settings={officialSettings(data.settings || {})} /></>;
+  const settings = officialSettings(data.settings || {});
+  return <><Header settings={settings} current={current} /><main>{page}</main><a className="floating-whatsapp" href={whatsappUrl(settings)} target="_blank" rel="noreferrer" aria-label="Chamar IMEC no WhatsApp"><MessageCircle size={24} /><span>Orcamento</span></a><Footer settings={settings} /></>;
 }
 
 function Admin() {
