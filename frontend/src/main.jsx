@@ -15,6 +15,7 @@ import {
   Lock,
   Mail,
   Menu,
+  MessageCircle,
   Phone,
   PlayCircle,
   Settings,
@@ -25,12 +26,29 @@ import {
   X,
   Youtube
 } from 'lucide-react';
-import heroImage from './assets/hero-industrial.svg';
+import heroImage from './assets/imec/hero-welder.jpg';
+import footerImage from './assets/imec/footer-industrial.jpg';
+import portfolioVasos from './assets/imec/portfolio-vasos.jpg';
+import portfolioTubulacoes from './assets/imec/portfolio-tubulacoes.jpg';
+import portfolioEstruturas from './assets/imec/portfolio-estruturas.jpg';
+import portfolioTanques from './assets/imec/portfolio-tanques.jpg';
+import portfolioCaldeiraria from './assets/imec/portfolio-caldeiraria.jpg';
+import portfolioCargas from './assets/imec/portfolio-cargas.jpg';
 import './styles.css';
+import './polish.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3333/api';
 const UPLOADS = import.meta.env.VITE_UPLOADS_URL || 'http://localhost:3333/uploads';
-const SITE_VERSION = 'Site institucional v2 - paginas separadas';
+const SITE_VERSION = 'Site institucional premium';
+const DEFAULT_PHONE = '(47) 99942-3000';
+const DEFAULT_WHATSAPP = '5547999423000';
+const DEFAULT_EMAIL = 'contato@imecmetalurgica.com.br';
+
+function whatsappUrl(settings = {}, message = 'Olá! Gostaria de solicitar um orçamento com a IMEC Metalúrgica.') {
+  const raw = settings.whatsapp || settings.phone || DEFAULT_WHATSAPP;
+  const phone = String(raw).replace(/\D/g, '') || DEFAULT_WHATSAPP;
+  return `https://wa.me/${phone.startsWith('55') ? phone : `55${phone}`}?text=${encodeURIComponent(message)}`;
+}
 
 function assetUrl(url) {
   if (!url) return heroImage;
@@ -51,14 +69,21 @@ async function api(path, options = {}) {
 
 const iconMap = { Factory, Wrench, Settings, Building2, Gauge, HardHat, Camera };
 const fallbackServices = [
-  { id: 's1', title: 'Caldeiraria', short_description: 'Fabricação e montagem de equipamentos e tubulações industriais.', icon: 'Factory' },
-  { id: 's2', title: 'Soldagem Industrial', short_description: 'Processos qualificados e soldadores certificados para máxima qualidade.', icon: 'Wrench' },
-  { id: 's3', title: 'Manutenção Industrial', short_description: 'Manutenção preventiva, preditiva e corretiva com foco em performance.', icon: 'Settings' },
-  { id: 's4', title: 'Estruturas Metálicas', short_description: 'Projetos, fabricação e montagem de estruturas metálicas sob medida.', icon: 'Building2' },
-  { id: 's5', title: 'NR-13', short_description: 'Adequação, inspeção, laudos e ART conforme norma NR-13.', icon: 'Gauge' },
-  { id: 's6', title: 'Rigging', short_description: 'Içamento e movimentação de cargas com segurança e planejamento.', icon: 'HardHat' }
+  { id: 's1', title: 'Caldeiraria', short_description: 'Fabricação e montagem de equipamentos, bases, tanques e tubulações industriais.', icon: 'Factory' },
+  { id: 's2', title: 'Soldagem Industrial', short_description: 'Processos qualificados, soldadores experientes e acabamento técnico para cada aplicação.', icon: 'Wrench' },
+  { id: 's3', title: 'Manutenção Industrial', short_description: 'Atendimento preventivo, preditivo e corretivo com foco em disponibilidade operacional.', icon: 'Settings' },
+  { id: 's4', title: 'Estruturas Metálicas', short_description: 'Projetos, fabricação e montagem de estruturas sob medida para ambientes industriais.', icon: 'Building2' },
+  { id: 's5', title: 'NR-13', short_description: 'Adequação, inspeção, laudos, documentação técnica e suporte para conformidade.', icon: 'Gauge' },
+  { id: 's6', title: 'Rigging', short_description: 'Içamento e movimentação de cargas com planejamento, segurança e responsabilidade.', icon: 'HardHat' }
 ];
-const fallbackPortfolio = ['Vasos de Pressão', 'Tubulações Industriais', 'Estruturas Metálicas', 'Manutenção Industrial', 'Caldeiraria Pesada', 'Movimentação de Cargas'].map((title, index) => ({ id: `p${index}`, title, category: 'Projeto industrial' }));
+const fallbackPortfolio = [
+  { title: 'Vasos de Pressão', category: 'Caldeiraria pesada', image_url: portfolioVasos },
+  { title: 'Tubulações Industriais', category: 'Montagem e soldagem', image_url: portfolioTubulacoes },
+  { title: 'Estruturas Metálicas', category: 'Projetos sob medida', image_url: portfolioEstruturas },
+  { title: 'Manutenção Industrial', category: 'Plantas e utilidades', image_url: portfolioTanques },
+  { title: 'Caldeiraria Pesada', category: 'Equipamentos especiais', image_url: portfolioCaldeiraria },
+  { title: 'Movimentação de Cargas', category: 'Rigging técnico', image_url: portfolioCargas },
+].map((item, index) => ({ id: `p${index}`, ...item }));
 
 function Logo({ settings = {} }) {
   return <a className="brand" href="/"><span className="mark">I</span><span><b>IMEC</b><small>Metalúrgica</small></span></a>;
@@ -74,8 +99,8 @@ function Header({ settings, current }) {
     <button className="menu" onClick={() => setOpen(!open)} aria-label="Menu">{open ? <X /> : <Menu />}</button>
     <nav className={open ? 'open' : ''}>{nav.map(([href, label]) => <a className={current === href ? 'active' : ''} href={href} key={href}>{label}</a>)}</nav>
     <div className="top-actions">
-      {settings?.phone && <a className="phone" href={`tel:${settings.phone}`}><Phone size={16} /> {settings.phone}</a>}
-      <a className="btn primary" href="/contato">Solicitar Orçamento</a>
+      <a className="phone" href={`tel:${settings?.phone || DEFAULT_PHONE}`}><Phone size={16} /> {settings?.phone || DEFAULT_PHONE}</a>
+      <a className="btn primary" href={whatsappUrl(settings)} target="_blank" rel="noreferrer"><MessageCircle size={16} /> Solicitar Orçamento</a>
     </div>
   </header>;
 }
@@ -84,7 +109,7 @@ function Footer({ settings }) {
   return <footer className="footer">
     <div><Logo settings={settings} /><p>Soluções industriais com engenharia, tecnologia e confiança.</p><small className="version-tag">{SITE_VERSION}</small></div>
     <div><h4>Navegação</h4><a href="/">Home</a><a href="/quem-somos">Quem Somos</a><a href="/servicos">Serviços</a><a href="/portfolio">Portfólio</a></div>
-    <div><h4>Contato</h4><span>{settings?.phone || '(47) 99942-3000'}</span><span>{settings?.email || 'contato@imecmetalurgica.com.br'}</span><span>{settings?.address || 'Joinville - SC, Brasil'}</span></div>
+    <div><h4>Contato</h4><span>{settings?.phone || DEFAULT_PHONE}</span><span>{settings?.email || DEFAULT_EMAIL}</span><span>{settings?.address || 'Joinville - SC, Brasil'}</span><a href={whatsappUrl(settings)}>Chamar no WhatsApp</a></div>
     <div><h4>Redes sociais</h4><div className="socials"><a href={settings?.linkedin_url || '#'}><Linkedin size={18} /></a><a href={settings?.instagram_url || '#'}><Instagram size={18} /></a><a href={settings?.youtube_url || '#'}><Youtube size={18} /></a></div></div>
     <a className="admin-link" href="/admin"><Lock size={14} /> Painel administrativo</a>
   </footer>;
@@ -109,13 +134,13 @@ function Home({ data }) {
   const services = data.services?.length ? data.services : fallbackServices;
   const portfolio = data.portfolio?.length ? data.portfolio : fallbackPortfolio;
   return <>
-    <section className="hero-ref" style={{ backgroundImage: `linear-gradient(90deg, rgba(3,10,18,.97), rgba(3,10,18,.66) 45%, rgba(3,10,18,.34) 68%, rgba(3,10,18,.88)), url(${assetUrl(settings.hero_image_url || home.image_url)})` }}>
-      <div className="hero-copy"><span>IMEC Metalúrgica</span><h1>{home.title || 'Soluções Industriais com Engenharia, Tecnologia e Confiança'}</h1><p>{home.subtitle || 'Excelência em caldeiraria, soldagem, manutenção industrial, estruturas metálicas, NR-13, rigging e responsabilidade técnica.'}</p><div className="hero-actions"><a className="btn primary" href="/contato">Solicitar Orçamento <ChevronRight size={18} /></a><a className="btn outline" href="/servicos">Ver Serviços <ChevronRight size={18} /></a></div></div>
+    <section className="hero-ref" style={{ backgroundImage: `linear-gradient(90deg, rgba(3,10,18,.98), rgba(3,10,18,.72) 44%, rgba(3,10,18,.26) 70%, rgba(3,10,18,.86)), url(${assetUrl(settings.hero_image_url || home.image_url || heroImage)})` }}>
+      <div className="hero-copy"><span>IMEC Metalúrgica</span><h1>{home.title || 'Soluções Industriais com Engenharia, Tecnologia e Confiança'}</h1><p>{home.subtitle || 'Excelência em caldeiraria, soldagem, manutenção industrial, estruturas metálicas, NR-13, rigging e responsabilidade técnica.'}</p><div className="hero-actions"><a className="btn primary" href={whatsappUrl(settings)} target="_blank" rel="noreferrer">Solicitar Orçamento <ChevronRight size={18} /></a><a className="btn outline" href="/servicos">Ver Serviços <ChevronRight size={18} /></a></div></div>
       <aside className="badges"><article><Award /><b>Qualidade</b><small>Padrões e processos de alta performance</small></article><article><ShieldCheck /><b>Segurança</b><small>Compromisso com a vida e o meio ambiente</small></article><article><Settings /><b>Responsabilidade Técnica</b><small>ART e documentação em conformidade</small></article></aside>
     </section>
     <section className="home-strip services-strip"><div className="strip-title"><span>Nossos Serviços</span><h2>Soluções completas para a indústria</h2><a href="/servicos">Ver todos <ChevronRight size={16} /></a></div><div className="service-row">{services.slice(0, 6).map((item) => <ServiceCard item={item} key={item.id} />)}</div></section>
     <section className="home-strip portfolio-strip"><div className="strip-title"><span>Portfólio</span><h2>Projetos que geram resultados</h2><a href="/portfolio">Ver portfólio completo <ChevronRight size={16} /></a></div><div className="portfolio-row">{portfolio.slice(0, 6).map((item) => <PortfolioCard item={item} key={item.id} />)}</div></section>
-    <section className="quick-links"><a href="/videos"><PlayCircle /><b>Vídeos</b><small>Projetos, processos e bastidores das operações.</small></a><a href="/galeria"><ImagePlus /><b>Galeria</b><small>Fotos de obras, fabricação e montagem industrial.</small></a><a href="/contato"><UserCircle /><b>Orçamento</b><small>Fale com a equipe técnica da IMEC.</small></a></section>
+    <section className="quick-links" style={{ backgroundImage: `linear-gradient(90deg,rgba(4,14,24,.94),rgba(8,31,52,.92)),url(${footerImage})` }}><a href="/videos"><PlayCircle /><b>Vídeos</b><small>Projetos, processos e bastidores das operações.</small></a><a href="/galeria"><ImagePlus /><b>Galeria</b><small>Fotos de obras, fabricação e montagem industrial.</small></a><a href={whatsappUrl(settings)} target="_blank" rel="noreferrer"><UserCircle /><b>Orçamento</b><small>Fale com a equipe técnica da IMEC pelo WhatsApp.</small></a></section>
   </>;
 }
 
@@ -149,8 +174,26 @@ function Contact({ data }) {
   const services = data.services?.length ? data.services : fallbackServices;
   const [sent, setSent] = useState('');
   const [quote, setQuote] = useState({ name: '', company: '', email: '', phone: '', service_interest: '', message: '' });
-  async function submit(event) { event.preventDefault(); await api('/public/quotes', { method: 'POST', body: JSON.stringify(quote) }); setSent('Pedido enviado com sucesso.'); setQuote({ name: '', company: '', email: '', phone: '', service_interest: '', message: '' }); }
-  return <section className="contact-page"><div><span>Solicitar Orçamento</span><h1>Conte sua demanda industrial para a IMEC</h1><p>Receba atendimento técnico para caldeiraria, soldagem, manutenção, estruturas metálicas, NR-13, rigging, montagem e tubulações.</p><p><Phone size={17} /> {settings.phone || '(47) 99942-3000'}</p><p><Mail size={17} /> {settings.email || 'contato@imecmetalurgica.com.br'}</p></div><form onSubmit={submit}>{['name', 'company', 'email', 'phone'].map((key) => <input key={key} placeholder={{ name: 'Nome', company: 'Empresa', email: 'E-mail', phone: 'Telefone / WhatsApp' }[key]} value={quote[key]} onChange={(e) => setQuote({ ...quote, [key]: e.target.value })} required={key !== 'company'} />)}<select value={quote.service_interest} onChange={(e) => setQuote({ ...quote, service_interest: e.target.value })}><option value="">Serviço de interesse</option>{services.map((item) => <option key={item.id}>{item.title}</option>)}</select><textarea placeholder="Descreva sua necessidade" value={quote.message} onChange={(e) => setQuote({ ...quote, message: e.target.value })} required /><button className="btn primary">Enviar Pedido</button>{sent && <p className="ok">{sent}</p>}</form></section>;
+  const quoteMessage = [
+    'Olá! Gostaria de solicitar um orçamento com a IMEC Metalúrgica.',
+    quote.name && `Nome: ${quote.name}`,
+    quote.company && `Empresa: ${quote.company}`,
+    quote.phone && `Telefone: ${quote.phone}`,
+    quote.email && `E-mail: ${quote.email}`,
+    quote.service_interest && `Serviço: ${quote.service_interest}`,
+    quote.message && `Mensagem: ${quote.message}`,
+  ].filter(Boolean).join('\n');
+  async function submit(event) {
+    event.preventDefault();
+    try {
+      await api('/public/quotes', { method: 'POST', body: JSON.stringify(quote) });
+      setSent('Pedido salvo com sucesso. Abrindo WhatsApp para agilizar o atendimento.');
+    } catch {
+      setSent('Abrindo WhatsApp para enviar seu pedido.');
+    }
+    window.open(whatsappUrl(settings, quoteMessage), '_blank', 'noopener,noreferrer');
+  }
+  return <section className="contact-page"><div><span>Solicitar Orçamento</span><h1>Conte sua demanda industrial para a IMEC</h1><p>Receba atendimento técnico para caldeiraria, soldagem, manutenção, estruturas metálicas, NR-13, rigging, montagem e tubulações.</p><p><Phone size={17} /> {settings.phone || DEFAULT_PHONE}</p><p><Mail size={17} /> {settings.email || DEFAULT_EMAIL}</p><div className="contact-stats"><article><b>24h</b><small>retorno técnico</small></article><article><b>NR-13</b><small>suporte documental</small></article><article><b>100%</b><small>foco em segurança</small></article></div></div><form onSubmit={submit}>{['name', 'company', 'email', 'phone'].map((key) => <input key={key} placeholder={{ name: 'Nome', company: 'Empresa', email: 'E-mail', phone: 'Telefone / WhatsApp' }[key]} value={quote[key]} onChange={(e) => setQuote({ ...quote, [key]: e.target.value })} required={key !== 'company'} />)}<select value={quote.service_interest} onChange={(e) => setQuote({ ...quote, service_interest: e.target.value })}><option value="">Serviço de interesse</option>{services.map((item) => <option key={item.id}>{item.title}</option>)}</select><textarea placeholder="Descreva sua necessidade" value={quote.message} onChange={(e) => setQuote({ ...quote, message: e.target.value })} required /><button className="btn primary">Enviar pelo WhatsApp</button>{sent && <p className="ok">{sent}</p>}</form></section>;
 }
 
 function PublicSite() {

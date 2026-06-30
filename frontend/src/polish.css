@@ -1,0 +1,54 @@
+.service-card,
+.portfolio-card,
+.quick-links a {
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.service-card:hover,
+.portfolio-card:hover,
+.quick-links a:hover {
+  transform: translateY(-3px);
+  border-color: rgba(38, 136, 255, 0.58);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+}
+
+.contact-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.contact-stats article {
+  padding: 16px;
+  background: rgba(16, 31, 48, 0.88);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.contact-stats b,
+.contact-stats small {
+  display: block;
+}
+
+.contact-stats b {
+  color: #fff;
+  font-size: 21px;
+}
+
+.contact-stats small {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.footer .brand {
+  margin-bottom: 16px;
+}
+
+@media (max-width: 640px) {
+  .contact-stats {
+    grid-template-columns: 1fr;
+  }
+}
