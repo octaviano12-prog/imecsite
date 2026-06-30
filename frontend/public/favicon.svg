@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="IMEC">
+  <defs>
+    <linearGradient id="metal" x1="8" x2="56" y1="8" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f4fbff"/>
+      <stop offset=".42" stop-color="#78a9d6"/>
+      <stop offset="1" stop-color="#123253"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="16" x2="48" y1="52" y2="12" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#176dd8"/>
+      <stop offset="1" stop-color="#69b4ff"/>
+    </linearGradient>
+  </defs>
+  <path fill="#050d15" d="M0 0h64v64H0z"/>
+  <path fill="url(#metal)" d="M32 5 55 18v28L32 59 9 46V18L32 5Z"/>
+  <path fill="#071522" d="M32 13 48 22v20L32 51 16 42V22l16-9Z"/>
+  <path fill="url(#blue)" d="M23 20h8v24h-8V20Zm10 0h8v24h-8V20Z"/>
+  <path fill="#dcecff" opacity=".9" d="M19 18 32 10v8l-7 4v20l-6-4V18Z"/>
+</svg>

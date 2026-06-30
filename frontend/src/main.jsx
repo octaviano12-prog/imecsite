@@ -41,8 +41,9 @@ import portfolioCargas from './assets/imec/portfolio-cargas.jpg';
 import './styles.css';
 import './polish.css';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:3333/api';
-const UPLOADS = import.meta.env.VITE_UPLOADS_URL || 'http://localhost:3333/uploads';
+const isLocalHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+const API = import.meta.env.VITE_API_URL || (isLocalHost ? 'http://localhost:3333/api' : '/api');
+const UPLOADS = import.meta.env.VITE_UPLOADS_URL || (isLocalHost ? 'http://localhost:3333/uploads' : '/uploads');
 const SITE_VERSION = 'Site institucional premium';
 const DEFAULT_PHONE = '(18) 3786-1272';
 const DEFAULT_WHATSAPP = '551837861272';
@@ -279,8 +280,30 @@ function InfoCard({ icon: Icon = FileText, title, text }) {
   return <article className="info-card"><Icon /><h3>{title}</h3><p>{text}</p></article>;
 }
 
+function AnimatedMetric({ value, label }) {
+  const [display, setDisplay] = useState(value);
+  useEffect(() => {
+    const match = String(value).match(/\d[\d.]*/);
+    if (!match) return;
+    const target = Number(match[0].replace(/\./g, ''));
+    const suffix = String(value).replace(match[0], '');
+    let frame = 0;
+    const total = 42;
+    const timer = window.setInterval(() => {
+      frame += 1;
+      const eased = 1 - Math.pow(1 - frame / total, 3);
+      const current = Math.round(target * eased);
+      const formatted = match[0].includes('.') ? current.toLocaleString('pt-BR') : String(current);
+      setDisplay(`${formatted}${suffix}`);
+      if (frame >= total) window.clearInterval(timer);
+    }, 24);
+    return () => window.clearInterval(timer);
+  }, [value]);
+  return <article><strong>{display}</strong><span>{label}</span></article>;
+}
+
 function ImpactStrip() {
-  return <section className="impact-strip">{impactMetrics.map(([value, label]) => <article key={label}><strong>{value}</strong><span>{label}</span></article>)}</section>;
+  return <section className="impact-strip">{impactMetrics.map(([value, label]) => <AnimatedMetric key={label} value={value} label={label} />)}</section>;
 }
 
 function CatalogCta({ settings }) {
@@ -289,6 +312,19 @@ function CatalogCta({ settings }) {
 
 function ProcessFlow() {
   return <section className="process-flow"><div className="process-heading"><span>Metodo IMEC</span><h2>Do diagnostico ao desempenho em campo</h2><p>Uma jornada visual para mostrar que a IMEC nao vende apenas equipamentos: entrega engenharia, execucao e acompanhamento tecnico.</p></div><div className="process-track">{processSteps.map((step, index) => { const Icon = step.icon; return <article key={step.title}><small>{String(index + 1).padStart(2, '0')}</small><Icon /><h3>{step.title}</h3><p>{step.text}</p></article>; })}</div></section>;
+}
+
+function ProjectHighlights() {
+  const items = [
+    ['Destilacao e etanol', 'Colunas, conjuntos e solucoes para producao de etanol combustivel, neutro e especial.'],
+    ['Tratamento de fuligem', 'Equipamentos para rotina de caldeira, utilidades e melhoria operacional.'],
+    ['Paradas industriais', 'Manutencao, reforma, montagem e movimentacao de equipamentos em campo.']
+  ];
+  return <section className="project-highlights"><div><span>Projetos executados</span><h2>Obras, equipamentos e manutencoes com foco em resultado</h2><p>Uma apresentacao mais direta para compradores, engenheiros e gestores: o site mostra onde a IMEC atua, o que entrega e como reduz risco tecnico na operacao.</p></div><div>{items.map(([title, text], index) => <article key={title}><strong>{String(index + 1).padStart(2, '0')}</strong><h3>{title}</h3><p>{text}</p><a href="/contato">Falar sobre projeto <ChevronRight size={15} /></a></article>)}</div></section>;
+}
+
+function FinalCta({ settings }) {
+  return <section className="final-cta"><span>Atendimento tecnico</span><h2>Precisa fabricar, reformar ou montar um equipamento industrial?</h2><p>Fale com a equipe da IMEC para avaliar sua necessidade com engenharia, prazo e responsabilidade tecnica.</p><div><a className="btn primary" href={whatsappUrl(settings)} target="_blank" rel="noreferrer"><MessageCircle size={17} /> Solicitar orcamento</a><a className="btn outline" href="/catalogo-imec.html" target="_blank" rel="noreferrer"><Download size={17} /> Ver catalogo</a></div></section>;
 }
 
 function Home({ data }) {
@@ -305,6 +341,8 @@ function Home({ data }) {
     <CatalogCta settings={settings} />
     <section className="home-strip services-strip"><div className="strip-title"><span>Principais Serviços</span><h2>Atuação no setor sucroalcooleiro</h2><a href="/servicos">Ver todos <ChevronRight size={16} /></a></div><div className="service-row">{services.slice(0, 6).map((item) => <ServiceCard item={item} key={item.id} />)}</div></section>
     <ProcessFlow />
+    <ProjectHighlights />
+    <FinalCta settings={settings} />
     <section className="home-strip portfolio-strip"><div className="strip-title"><span>Produtos</span><h2>Equipamentos para usinas</h2><a href="/portfolio">Ver produtos <ChevronRight size={16} /></a></div><div className="portfolio-row">{portfolio.slice(0, 6).map((item) => <PortfolioCard item={item} key={item.id} />)}</div></section>
     <section className="quick-links" style={{ backgroundImage: `linear-gradient(90deg,rgba(4,14,24,.94),rgba(8,31,52,.92)),url(${footerImage})` }}><a href="/produtos"><Factory /><b>Produtos</b><small>Equipamentos para usinas, destilação e tratamento de fuligem.</small></a><a href="/setores"><Building2 /><b>Setores</b><small>Etanol, açúcar, energia e indústria alimentícia.</small></a><a href={whatsappUrl(settings)} target="_blank" rel="noreferrer"><UserCircle /><b>Orçamento</b><small>Fale com a equipe técnica da IMEC pelo WhatsApp.</small></a></section>
     <section className="overview-band"><div><span>Referência nacional</span><h2>Mais de 100 usinas atendidas</h2><p>A IMEC reúne experiência no setor sucroalcooleiro, comunicação direta com o cliente e acompanhamento de performance após a entrega.</p></div><div className="overview-grid">{differentials.map((item) => <InfoCard key={item.title} {...item} />)}</div></section>
@@ -406,7 +444,7 @@ function PublicSite() {
   useEffect(() => { api('/public/bootstrap').then(setData).catch(() => {}); }, []);
   const current = window.location.pathname.replace(/\/$/, '') || '/';
   useEffect(() => {
-    const targets = document.querySelectorAll('.home-strip,.quick-links,.overview-band,.page-grid,.gallery-grid,.video-grid,.content-split,.timeline-section,.product-list,.client-section,.contact-page,.service-card,.portfolio-card,.info-card,.impact-strip article,.catalog-cta,.detail-page,.process-flow,.process-track article,.map-card');
+    const targets = document.querySelectorAll('.home-strip,.quick-links,.overview-band,.page-grid,.gallery-grid,.video-grid,.content-split,.timeline-section,.product-list,.client-section,.contact-page,.service-card,.portfolio-card,.info-card,.impact-strip article,.catalog-cta,.detail-page,.process-flow,.process-track article,.project-highlights,.project-highlights article,.final-cta,.map-card');
     targets.forEach((target) => target.classList.add('reveal'));
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -440,7 +478,28 @@ function PublicSite() {
       document.head.appendChild(meta);
     }
     meta.setAttribute('content', description);
-  }, [current]);
+    const settings = officialSettings(data.settings || {});
+    const jsonLd = {
+      '@context': 'https://schema.org',
+      '@type': 'LocalBusiness',
+      name: 'IMEC Metalurgica',
+      description,
+      telephone: settings.phone || DEFAULT_PHONE,
+      email: settings.email || DEFAULT_EMAIL,
+      address: settings.address || DEFAULT_ADDRESS,
+      url: window.location.origin,
+      areaServed: 'Brasil',
+      makesOffer: ['Montagem industrial', 'Manutencao de equipamentos', 'Projetos industriais', 'Equipamentos para usinas']
+    };
+    let script = document.querySelector('script[data-seo="imec"]');
+    if (!script) {
+      script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.dataset.seo = 'imec';
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(jsonLd);
+  }, [current, data.settings]);
   const page = useMemo(() => {
     if (current.startsWith('/servicos/')) return <ServiceDetail data={data} slug={current.replace('/servicos/', '')} />;
     if (current.startsWith('/produtos/')) return <ProductDetail data={data} slug={current.replace('/produtos/', '')} />;
@@ -467,14 +526,33 @@ function Admin() {
   const [state, setState] = useState({});
   const [msg, setMsg] = useState('');
   const tabs = ['settings', 'pages', 'services', 'portfolio', 'categories', 'photos', 'videos', 'quotes'];
-  async function load() { const entries = await Promise.all([api('/admin/settings').then((d) => ['settings', d]), ...tabs.filter((x) => x !== 'settings').map((r) => api('/admin/' + r).then((d) => [r, d]))]); setState(Object.fromEntries(entries)); }
+  const labels = { settings: 'Empresa', pages: 'Paginas', services: 'Servicos', portfolio: 'Produtos', categories: 'Categorias', photos: 'Fotos', videos: 'Videos', quotes: 'Orcamentos' };
+  async function load() {
+    setMsg('');
+    try {
+      const entries = await Promise.all([api('/admin/settings').then((d) => ['settings', d]), ...tabs.filter((x) => x !== 'settings').map((r) => api('/admin/' + r).then((d) => [r, d]))]);
+      setState(Object.fromEntries(entries));
+    } catch (e) {
+      setMsg(`${e.message} Verifique se a API esta online e se o dominio aponta para /api.`);
+    }
+  }
   useEffect(() => { if (token) load().catch((e) => setMsg(e.message)); }, [token]);
-  async function enter(e) { e.preventDefault(); const d = await api('/auth/login', { method: 'POST', body: JSON.stringify(login) }); localStorage.setItem('imec_token', d.token); setToken(d.token); }
-  if (!token) return <main className="login"><form onSubmit={enter}><Logo /><h1>Painel Administrativo</h1><input value={login.email} onChange={(e) => setLogin({ ...login, email: e.target.value })} /><input type="password" value={login.password} onChange={(e) => setLogin({ ...login, password: e.target.value })} /><button className="btn primary">Entrar</button></form></main>;
+  async function enter(e) {
+    e.preventDefault();
+    setMsg('');
+    try {
+      const d = await api('/auth/login', { method: 'POST', body: JSON.stringify(login) });
+      localStorage.setItem('imec_token', d.token);
+      setToken(d.token);
+    } catch (error) {
+      setMsg(`${error.message} Se estiver em desenvolvimento, inicie tambem o backend na porta 3333.`);
+    }
+  }
+  if (!token) return <main className="login"><form onSubmit={enter}><Logo /><h1>Painel Administrativo</h1><p>Entre para atualizar textos, servicos, produtos, fotos, videos e pedidos de orcamento.</p><input placeholder="E-mail" value={login.email} onChange={(e) => setLogin({ ...login, email: e.target.value })} /><input placeholder="Senha" type="password" value={login.password} onChange={(e) => setLogin({ ...login, password: e.target.value })} /><button className="btn primary">Entrar</button><a className="btn outline" href="/">Voltar ao site</a>{msg && <p className="admin-warning">{msg}</p>}</form></main>;
   async function saveSettings(e) { e.preventDefault(); await api('/admin/settings', { method: 'PUT', body: JSON.stringify(state.settings) }); setMsg('Salvo.'); }
   async function upload(file, cb) { const fd = new FormData(); fd.append('file', file); const d = await api('/admin/upload', { method: 'POST', body: fd }); cb(d.url); }
   async function save(resource, item) { await api(`/admin/${resource}${item.id ? '/' + item.id : ''}`, { method: item.id ? 'PUT' : 'POST', body: JSON.stringify(item) }); await load(); setMsg('Salvo.'); }
-  return <main className="admin"><aside><Logo />{tabs.map((x) => <button className={tab === x ? 'active' : ''} onClick={() => setTab(x)} key={x}>{x}</button>)}<button onClick={() => { localStorage.clear(); setToken(''); }}>Sair</button></aside><section><h1>{tab}</h1>{msg && <p className="ok">{msg}</p>}{tab === 'settings' ? <SettingsForm data={state.settings || {}} setData={(d) => setState({ ...state, settings: d })} save={saveSettings} upload={upload} /> : <Crud resource={tab} items={state[tab] || []} save={save} upload={upload} />}</section></main>;
+  return <main className="admin"><aside><Logo /><a className="admin-site-link" href="/">Ver site</a>{tabs.map((x) => <button className={tab === x ? 'active' : ''} onClick={() => setTab(x)} key={x}>{labels[x]}</button>)}<button onClick={load}>Recarregar</button><button onClick={() => { localStorage.clear(); setToken(''); }}>Sair</button></aside><section><div className="admin-head"><span>Painel IMEC</span><h1>{labels[tab]}</h1><p>Gerencie o conteudo que aparece no site institucional.</p></div>{msg && <p className={msg === 'Salvo.' ? 'ok' : 'admin-warning'}>{msg}</p>}{tab === 'settings' ? <SettingsForm data={state.settings || {}} setData={(d) => setState({ ...state, settings: d })} save={saveSettings} upload={upload} /> : <Crud resource={tab} items={state[tab] || []} save={save} upload={upload} />}</section></main>;
 }
 
 function SettingsForm({ data, setData, save, upload }) {
