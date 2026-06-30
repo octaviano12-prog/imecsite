@@ -30,6 +30,7 @@ import './styles.css';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3333/api';
 const UPLOADS = import.meta.env.VITE_UPLOADS_URL || 'http://localhost:3333/uploads';
+const SITE_VERSION = 'Site institucional v2 - paginas separadas';
 
 function assetUrl(url) {
   if (!url) return heroImage;
@@ -81,7 +82,7 @@ function Header({ settings, current }) {
 
 function Footer({ settings }) {
   return <footer className="footer">
-    <div><Logo settings={settings} /><p>Soluções industriais com engenharia, tecnologia e confiança.</p></div>
+    <div><Logo settings={settings} /><p>Soluções industriais com engenharia, tecnologia e confiança.</p><small className="version-tag">{SITE_VERSION}</small></div>
     <div><h4>Navegação</h4><a href="/">Home</a><a href="/quem-somos">Quem Somos</a><a href="/servicos">Serviços</a><a href="/portfolio">Portfólio</a></div>
     <div><h4>Contato</h4><span>{settings?.phone || '(47) 99942-3000'}</span><span>{settings?.email || 'contato@imecmetalurgica.com.br'}</span><span>{settings?.address || 'Joinville - SC, Brasil'}</span></div>
     <div><h4>Redes sociais</h4><div className="socials"><a href={settings?.linkedin_url || '#'}><Linkedin size={18} /></a><a href={settings?.instagram_url || '#'}><Instagram size={18} /></a><a href={settings?.youtube_url || '#'}><Youtube size={18} /></a></div></div>
