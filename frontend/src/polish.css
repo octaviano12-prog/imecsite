@@ -210,14 +210,38 @@
   border-radius: 6px;
 }
 
+.contact-stats svg {
+  width: 32px;
+  height: 32px;
+  color: var(--blue2);
+  margin-bottom: 12px;
+  filter: drop-shadow(0 0 12px rgba(38,136,255,.34));
+}
+
 .contact-stats b,
-.contact-stats small {
+.contact-stats small,
+.contact-stats strong {
   display: block;
 }
 
 .contact-stats b {
   color: #fff;
   font-size: 21px;
+}
+
+.contact-stats strong {
+  color: #d9ecff;
+  font-size: clamp(26px, 2vw, 36px);
+  font-style: italic;
+  letter-spacing: .5px;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.contact-stats .bndes-stat {
+  background:
+    radial-gradient(circle at 20% 0%, rgba(105,180,255,.22), transparent 38%),
+    rgba(16, 31, 48, 0.88);
 }
 
 .contact-stats small {
