@@ -2770,3 +2770,261 @@ summary:focus-visible {
     border-bottom: 1px solid rgba(156,185,216,.18);
   }
 }
+
+/* Services page refinement */
+.page-title:has(+ .service-commerce-grid) {
+  min-height: clamp(360px, 34vw, 520px);
+  display: grid;
+  align-content: center;
+  background:
+    linear-gradient(90deg, rgba(3,10,18,.98) 0%, rgba(5,16,28,.94) 42%, rgba(5,22,41,.66) 100%),
+    radial-gradient(circle at 72% 48%, rgba(38,136,255,.28), transparent 32%),
+    url('./assets/imec/footer-industrial.jpg') center right / cover;
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+}
+
+.page-title:has(+ .service-commerce-grid):before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(135deg, transparent 0 50%, rgba(105,180,255,.18) 50.4%, transparent 51%),
+    repeating-linear-gradient(90deg, rgba(105,180,255,.045) 0 1px, transparent 1px 88px),
+    repeating-linear-gradient(0deg, rgba(105,180,255,.035) 0 1px, transparent 1px 88px);
+  mask-image: linear-gradient(90deg, transparent 34%, #000 66%, #000);
+}
+
+.page-title:has(+ .service-commerce-grid):after {
+  content: "Engenharia aplicada  |  Equipe tecnica especializada  |  Seguranca e confiabilidade";
+  max-width: 760px;
+  margin-top: 24px;
+  color: #d8e8fa;
+  font-size: 14px;
+  font-weight: 800;
+  word-spacing: 4px;
+}
+
+.service-commerce-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(18px, 1.8vw, 28px);
+  padding-top: 44px;
+  padding-bottom: 88px;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(38,136,255,.13), transparent 26%),
+    linear-gradient(180deg, #071624, #050d15);
+}
+
+.service-commerce-card {
+  position: relative;
+  min-height: 430px;
+  padding: 28px;
+  background:
+    linear-gradient(155deg, rgba(19, 42, 66, .96), rgba(7, 19, 32, .98));
+  border-color: rgba(156,185,216,.28);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 18px 50px rgba(0,0,0,.18);
+  overflow: hidden;
+}
+
+.service-commerce-card:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(105,180,255,.1), transparent);
+  transform: translateX(-120%);
+  transition: transform 620ms ease;
+  pointer-events: none;
+}
+
+.service-commerce-card:hover:before {
+  transform: translateX(120%);
+}
+
+.service-commerce-card > div:first-child {
+  margin-bottom: 26px;
+}
+
+.service-commerce-card svg {
+  width: 54px;
+  height: 54px;
+}
+
+.service-commerce-card > div:first-child span {
+  display: grid;
+  place-items: center;
+  min-width: 38px;
+  height: 32px;
+  padding: 0 10px;
+  color: #fff;
+  border: 1px solid rgba(105,180,255,.24);
+  border-radius: 8px;
+  background: rgba(105,180,255,.12);
+}
+
+.service-commerce-card h3 {
+  font-size: 21px;
+}
+
+.service-commerce-card p {
+  color: #bfcede;
+  font-size: 15px;
+}
+
+.service-commerce-card dl {
+  gap: 10px;
+  padding: 20px;
+  background: rgba(2, 8, 14, .34);
+}
+
+.service-commerce-card dt {
+  font-size: 12px;
+  letter-spacing: .02em;
+}
+
+.service-commerce-card dd {
+  color: #dfebf7;
+  font-size: 14px;
+}
+
+.service-commerce-card a {
+  position: relative;
+  z-index: 1;
+}
+
+.capability-section {
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px) 0 0 / 86px 86px,
+    linear-gradient(135deg, #06111d, #0a2035);
+}
+
+.capability-grid article {
+  display: grid;
+  grid-template-columns: 66px 1fr;
+  grid-template-rows: auto 1fr;
+  column-gap: 18px;
+  row-gap: 8px;
+  min-height: 188px;
+  padding: 28px;
+}
+
+.capability-grid svg {
+  grid-row: span 2;
+  width: 50px;
+  height: 50px;
+}
+
+.capability-grid h3,
+.capability-grid p {
+  min-width: 0;
+}
+
+.faq-list details {
+  transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.faq-list details:hover,
+.faq-list details[open] {
+  border-color: rgba(105,180,255,.48);
+  background: rgba(8, 23, 39, .92);
+}
+
+.faq-list details:hover {
+  transform: translateX(4px);
+}
+
+.faq-list summary {
+  transition: color 180ms ease;
+}
+
+.faq-list details[open] summary {
+  color: var(--blue2);
+}
+
+.final-cta {
+  position: relative;
+  padding-top: 82px;
+  padding-bottom: 82px;
+  overflow: hidden;
+}
+
+.final-cta:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(38,136,255,.2), transparent 34%),
+    linear-gradient(90deg, rgba(3,9,16,.58), transparent 26%, transparent 74%, rgba(3,9,16,.58));
+  pointer-events: none;
+}
+
+.final-cta > * {
+  position: relative;
+  z-index: 1;
+}
+
+.final-cta .btn {
+  min-height: 50px;
+  padding-left: 28px;
+  padding-right: 28px;
+}
+
+@media (min-width: 1500px) {
+  .service-commerce-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .service-commerce-card:nth-child(6) {
+    grid-column: span 3;
+    min-height: 260px;
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr) minmax(320px, .9fr);
+    align-items: start;
+    column-gap: 30px;
+  }
+
+  .service-commerce-card:nth-child(6) > div:first-child,
+  .service-commerce-card:nth-child(6) h3,
+  .service-commerce-card:nth-child(6) p {
+    grid-column: 1;
+  }
+
+  .service-commerce-card:nth-child(6) dl {
+    grid-column: 2;
+    margin: 0;
+  }
+
+  .service-commerce-card:nth-child(6) a {
+    grid-column: 3;
+    align-self: end;
+    justify-self: start;
+  }
+}
+
+@media (max-width: 1180px) {
+  .service-commerce-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .page-title:has(+ .service-commerce-grid):after {
+    content: none;
+  }
+
+  .service-commerce-grid,
+  .capability-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .service-commerce-card,
+  .capability-grid article {
+    min-height: auto;
+  }
+
+  .capability-grid article {
+    grid-template-columns: 52px 1fr;
+    padding: 22px;
+  }
+}
