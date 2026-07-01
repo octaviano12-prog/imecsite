@@ -3028,3 +3028,211 @@ summary:focus-visible {
     padding: 22px;
   }
 }
+
+/* Products page refinement */
+.page-title:has(+ .catalog-page) {
+  min-height: clamp(380px, 35vw, 540px);
+  display: grid;
+  align-content: center;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(3,10,18,.98) 0%, rgba(5,16,28,.94) 42%, rgba(5,22,41,.62) 100%),
+    radial-gradient(circle at 72% 46%, rgba(38,136,255,.3), transparent 34%),
+    url('./assets/imec/project-premium-shop.jpg') center right / cover;
+  animation: productHeroDrift 20s ease-in-out infinite alternate;
+}
+
+.page-title:has(+ .catalog-page):before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(135deg, transparent 0 48%, rgba(105,180,255,.2) 48.3%, transparent 49%),
+    repeating-linear-gradient(90deg, rgba(105,180,255,.045) 0 1px, transparent 1px 86px),
+    repeating-linear-gradient(0deg, rgba(105,180,255,.035) 0 1px, transparent 1px 86px);
+  mask-image: linear-gradient(90deg, transparent 32%, #000 62%, #000);
+}
+
+.page-title:has(+ .catalog-page):after {
+  content: "Aplicacao industrial  |  Atendimento tecnico  |  Solucoes sob medida";
+  max-width: 780px;
+  margin-top: 24px;
+  color: #d8e8fa;
+  font-size: 14px;
+  font-weight: 800;
+  word-spacing: 4px;
+}
+
+.catalog-page {
+  grid-template-columns: minmax(300px, 390px) 1fr;
+  gap: clamp(22px, 2vw, 34px);
+  padding-top: 44px;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(38,136,255,.14), transparent 28%),
+    linear-gradient(90deg, rgba(5, 16, 27, .98), rgba(8, 26, 43, .96)),
+    url('./assets/imec/project-premium-shop.jpg') center/cover fixed;
+}
+
+.catalog-intro {
+  padding: 32px;
+  background:
+    linear-gradient(155deg, rgba(19,42,66,.9), rgba(5,16,27,.9));
+  border-color: rgba(105,180,255,.3);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 24px 60px rgba(0,0,0,.28);
+}
+
+.catalog-intro:before {
+  content: "";
+  display: block;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 22px;
+  border: 1px solid rgba(105,180,255,.32);
+  border-radius: 10px;
+  background:
+    linear-gradient(135deg, rgba(105,180,255,.22), rgba(105,180,255,.04)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='52' height='52' viewBox='0 0 24 24' fill='none' stroke='%2369b4ff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 19.5A2.5 2.5 0 0 1 6.5 17H20'/%3E%3Cpath d='M4 4v15.5'/%3E%3Cpath d='M20 22V6a2 2 0 0 0-2-2H6.5A2.5 2.5 0 0 0 4 6.5v0A2.5 2.5 0 0 0 6.5 9H20'/%3E%3C/svg%3E") center/30px 30px no-repeat;
+  box-shadow: 0 0 26px rgba(38,136,255,.2);
+}
+
+.catalog-intro h2 {
+  font-size: clamp(28px, 2.6vw, 42px);
+}
+
+.catalog-intro p {
+  color: #d5e2ef;
+}
+
+.catalog-intro-list {
+  display: grid;
+  gap: 12px;
+  margin: 22px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.catalog-intro-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  color: #dce9f7;
+  line-height: 1.35;
+}
+
+.catalog-intro-list svg {
+  flex: 0 0 auto;
+  color: var(--warm);
+  margin-top: 2px;
+}
+
+.catalog-grid {
+  gap: clamp(18px, 1.6vw, 26px);
+}
+
+.catalog-card {
+  display: flex;
+  flex-direction: column;
+  background:
+    linear-gradient(155deg, rgba(19,42,66,.95), rgba(7,19,32,.98));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 18px 48px rgba(0,0,0,.2);
+}
+
+.catalog-card img {
+  min-height: 230px;
+  filter: saturate(1.08) contrast(1.03);
+  transition: transform 800ms ease, filter 220ms ease;
+}
+
+.catalog-card:hover img {
+  transform: scale(1.045);
+  filter: saturate(1.16) contrast(1.08);
+}
+
+.catalog-card > div {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 24px;
+}
+
+.catalog-card h3 {
+  font-size: 22px;
+}
+
+.catalog-card p {
+  color: #d3dfec;
+  font-size: 15px;
+}
+
+.catalog-card ul {
+  margin-top: auto;
+  padding-top: 18px;
+}
+
+.catalog-actions {
+  align-items: center;
+  margin-top: 18px;
+}
+
+.catalog-actions a:last-child {
+  min-width: 108px;
+  justify-content: center;
+  padding: 11px 16px;
+  border-radius: 6px;
+  color: #fff;
+  background: linear-gradient(180deg, #48a4ff, #1169d4);
+  box-shadow: 0 12px 28px rgba(18,102,211,.3);
+}
+
+.catalog-page + .faq-section {
+  border-top: 1px solid rgba(156,185,216,.16);
+}
+
+.catalog-page + .faq-section .faq-list details {
+  transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.catalog-page + .faq-section .faq-list details:hover,
+.catalog-page + .faq-section .faq-list details[open] {
+  border-color: rgba(105,180,255,.48);
+  background: rgba(8, 23, 39, .92);
+}
+
+.catalog-page + .faq-section .faq-list details:hover {
+  transform: translateX(4px);
+}
+
+.catalog-page + .faq-section + .final-cta,
+.catalog-page ~ .final-cta {
+  padding-top: 82px;
+  padding-bottom: 82px;
+}
+
+@keyframes productHeroDrift {
+  from {
+    background-position: center right, center right, 68% center;
+  }
+  to {
+    background-position: center right, center right, 56% center;
+  }
+}
+
+@media (min-width: 1500px) {
+  .catalog-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .page-title:has(+ .catalog-page):after {
+    content: none;
+  }
+
+  .catalog-intro {
+    position: relative;
+    top: auto;
+  }
+}
