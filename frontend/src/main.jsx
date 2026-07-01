@@ -464,13 +464,30 @@ function Products({ data }) {
 }
 
 function Sectors() {
-  return <><PageTitle eyebrow="Setores" title="Mercados atendidos pela IMEC" text="Atuação voltada ao setor sucroalcooleiro, energia, plantas industriais e indústria alimentícia." /><section className="page-grid service-grid">{sectors.map((title, index) => <InfoCard key={title} icon={[Factory, Gauge, Building2, Settings, Wrench, HardHat][index % 6]} title={title} text="Soluções técnicas, equipamentos e serviços para operação, manutenção e melhoria de processos industriais." />)}</section></>;
+  const sectorDetails = sectors.map((title, index) => ({
+    title,
+    icon: [Factory, Gauge, Building2, Settings, Wrench, HardHat][index % 6],
+    text: [
+      'Equipamentos, montagem e manutencao para operacoes de acucar, alcool e bioenergia.',
+      'Solucoes para destilacao, concentracao, utilidades e processos que exigem estabilidade.',
+      'Apoio tecnico para plantas industriais, estruturas, tubulacoes e equipamentos sob medida.',
+      'Aplicacoes para industria alimenticia com foco em confiabilidade, higiene e disponibilidade.',
+      'Projetos e reformas para utilidades, vapor, caldeiras, tanques e trocadores de calor.',
+      'Tratamento de fuligem, melhoria de rotina industrial e suporte para reduzir paradas.'
+    ][index]
+  }));
+  return <><PageTitle eyebrow="Setores" title="Mercados atendidos pela IMEC" text="Atuacao voltada ao setor sucroalcooleiro, energia, plantas industriais e industria alimenticia." /><section className="sector-showcase"><div className="sector-lead"><span>Atuacao industrial</span><h2>Do processo sucroalcooleiro a plantas completas</h2><p>A IMEC conecta engenharia, fabricacao e campo para atender operacoes que precisam de prazo, robustez e suporte tecnico depois da entrega.</p><a className="btn primary" href="/contato"><MessageCircle size={17} /> Falar com especialista</a></div><div className="sector-grid">{sectorDetails.map(({ icon: Icon, title, text }, index) => <article key={title}><small>{String(index + 1).padStart(2, '0')}</small><Icon /><h3>{title}</h3><p>{text}</p><a href="/produtos">Ver solucoes <ChevronRight size={15} /></a></article>)}</div></section><section className="sector-proof"><article><b>100+</b><span>usinas atendidas</span></article><article><b>1998</b><span>inicio das atividades</span></article><article><b>BNDES</b><span>fornecedor cadastrado</span></article><article><b>Brasil</b><span>atendimento nacional</span></article></section></>;
 }
 
 function Clients() {
-  return <><PageTitle eyebrow="Clientes" title="Experiência com mais de 100 usinas" text="A IMEC construiu sua trajetória atendendo usinas de açúcar e álcool e empresas da indústria alimentícia em projetos, equipamentos e serviços especializados." /><section className="client-section"><div>{clients.map((item) => <article key={item}><Users /><p>{item}</p></article>)}</div><aside><h2>Relacionamento técnico</h2><p>O diferencial da IMEC está na proximidade com o cliente: comunicação direta com o responsável pelo projeto e acompanhamento de performance após a entrega.</p><a className="btn primary" href="/contato">Falar com a IMEC <ChevronRight size={16} /></a></aside></section></>;
+  const clientCards = [
+    ['Usinas de acucar e alcool', 'Atendimento tecnico para operacoes que dependem de disponibilidade, eficiencia e cumprimento de prazo.'],
+    ['Destilarias e plantas de etanol', 'Equipamentos e servicos para processos de destilacao, utilidades e melhorias industriais.'],
+    ['Industria alimenticia', 'Solucoes industriais para empresas que precisam de fabricacao robusta e suporte proximo.'],
+    ['Projetos com acompanhamento', 'Comunicacao direta com responsaveis tecnicos e acompanhamento de performance apos a entrega.']
+  ];
+  return <><PageTitle eyebrow="Clientes" title="Experiencia com mais de 100 usinas" text="A IMEC construiu sua trajetoria atendendo usinas de acucar e alcool e empresas industriais em projetos, equipamentos e servicos especializados." /><section className="clients-premium"><div className="clients-intro"><span>Confianca em campo</span><h2>Relacionamento tecnico do primeiro contato a operacao</h2><p>O diferencial da IMEC esta na proximidade com o cliente: atendimento direto, entendimento do processo e suporte para compras, engenharia e operacao decidirem com seguranca.</p><div><strong>100+</strong><small>usinas atendidas</small></div><a className="btn primary" href="/contato">Falar com a IMEC <ChevronRight size={16} /></a></div><div className="clients-grid">{clientCards.map(([title, text], index) => <article key={title}><Users /><small>{String(index + 1).padStart(2, '0')}</small><h3>{title}</h3><p>{text}</p></article>)}</div></section><section className="client-process"><article><FileText /><b>Escopo claro</b><span>Entendimento tecnico e comercial antes da proposta.</span></article><article><Factory /><b>Execucao conectada</b><span>Fabricacao, montagem e campo trabalhando com o mesmo objetivo.</span></article><article><Gauge /><b>Performance acompanhada</b><span>Suporte depois da entrega para reduzir risco operacional.</span></article></section></>;
 }
-
 function WorkWithUs() {
   return <><PageTitle eyebrow="Trabalhe Conosco" title="Envie seu currículo para a IMEC" text="No momento a empresa pode não ter vagas abertas, mas mantém banco de currículos para futuras oportunidades." /><section className="contact-page work-page"><div><span>Banco de talentos</span><h1>Faça parte da nossa história</h1><p>A IMEC valoriza o tempo e dedicação de seus colaboradores. Envie suas informações para que a equipe possa considerar seu perfil em novas oportunidades.</p><p><Mail size={17} /> {DEFAULT_EMAIL}</p><p><Briefcase size={17} /> Sud Mennucci - SP</p></div><form onSubmit={(event) => { event.preventDefault(); window.location.href = `mailto:${DEFAULT_EMAIL}?subject=${encodeURIComponent('Currículo - Banco de Talentos IMEC')}`; }}><input placeholder="Nome" required /><input placeholder="Telefone / WhatsApp" required /><input placeholder="E-mail" required /><textarea placeholder="Área de interesse ou breve apresentação" required /><button className="btn primary">Enviar por e-mail</button></form></section></>;
 }
@@ -539,12 +556,12 @@ function Contact({ data }) {
   const [sent, setSent] = useState('');
   const [quote, setQuote] = useState({ name: '', company: '', email: '', phone: '', service_interest: '', message: '' });
   const quoteMessage = [
-    'Olá! Gostaria de solicitar um orçamento com a IMEC Metalúrgica.',
+    'Ola! Gostaria de solicitar um orcamento com a IMEC Metalurgica.',
     quote.name && `Nome: ${quote.name}`,
     quote.company && `Empresa: ${quote.company}`,
     quote.phone && `Telefone: ${quote.phone}`,
     quote.email && `E-mail: ${quote.email}`,
-    quote.service_interest && `Serviço: ${quote.service_interest}`,
+    quote.service_interest && `Servico: ${quote.service_interest}`,
     quote.message && `Mensagem: ${quote.message}`,
   ].filter(Boolean).join('\n');
   async function submit(event) {
@@ -557,9 +574,8 @@ function Contact({ data }) {
     }
     window.open(whatsappUrl(settings, quoteMessage), '_blank', 'noopener,noreferrer');
   }
-  return <section className="contact-page"><div><span>Solicitar Orçamento</span><h1>Fale com a IMEC sobre sua usina ou projeto industrial</h1><p>Entre em contato para montagem industrial, suporte técnico, manutenção de equipamentos, projetos, locação de guinchos e munks, ou produtos para etanol, açúcar e energia.</p><p><Phone size={17} /> {settings.phone || DEFAULT_PHONE}</p><p><Mail size={17} /> {settings.email || DEFAULT_EMAIL}</p><p><MapPin size={17} /> {settings.address || DEFAULT_ADDRESS}</p><div className="contact-stats"><article><b>100+</b><small>usinas atendidas</small></article><article><b>1998</b><small>início das atividades</small></article><article><b>BNDES</b><small>fornecedor cadastrado</small></article></div><QuoteChecklist /></div><form onSubmit={submit}>{['name', 'company', 'email', 'phone'].map((key) => <input key={key} placeholder={{ name: 'Nome', company: 'Empresa', email: 'E-mail', phone: 'Telefone / WhatsApp' }[key]} value={quote[key]} onChange={(e) => setQuote({ ...quote, [key]: e.target.value })} required={key !== 'company'} />)}<select value={quote.service_interest} onChange={(e) => setQuote({ ...quote, service_interest: e.target.value })}><option value="">Serviço de interesse</option>{services.map((item) => <option key={item.id}>{item.title}</option>)}</select><textarea placeholder="Descreva sua necessidade" value={quote.message} onChange={(e) => setQuote({ ...quote, message: e.target.value })} required /><button className="btn primary">Enviar pelo WhatsApp</button>{sent && <p className="ok">{sent}</p>}</form></section>;
+  return <><section className="contact-page premium-contact"><div><span>Solicitar Orcamento</span><h1>Fale com a IMEC sobre sua usina ou projeto industrial</h1><p>Conte o que precisa fabricar, reformar, montar ou movimentar. A equipe direciona o atendimento para engenharia, campo ou comercial conforme a necessidade.</p><div className="contact-actions"><a className="btn primary" href={whatsappUrl(settings)} target="_blank" rel="noreferrer"><MessageCircle size={17} /> Chamar no WhatsApp</a><a className="btn outline" href={`tel:${String(settings.phone || DEFAULT_PHONE).replace(/\D/g, '')}`}><Phone size={17} /> Ligar agora</a></div><div className="contact-channels"><article><Phone /><b>{settings.phone || DEFAULT_PHONE}</b><span>Telefone comercial</span></article><article><Mail /><b>{settings.email || DEFAULT_EMAIL}</b><span>Envie documentos e escopos</span></article><article><MapPin /><b>Sud Mennucci - SP</b><span>Atendimento nacional</span></article></div><div className="contact-stats"><article><b>100+</b><small>usinas atendidas</small></article><article><b>1998</b><small>inicio das atividades</small></article><article><b>BNDES</b><small>fornecedor cadastrado</small></article></div><QuoteChecklist /></div><form className="quote-form" onSubmit={submit}><div className="form-head"><span>Pedido rapido</span><h2>Descreva sua necessidade</h2><p>Quanto mais contexto, mais objetiva sera a primeira conversa tecnica.</p></div>{['name', 'company', 'email', 'phone'].map((key) => <input key={key} placeholder={{ name: 'Nome', company: 'Empresa', email: 'E-mail', phone: 'Telefone / WhatsApp' }[key]} value={quote[key]} onChange={(e) => setQuote({ ...quote, [key]: e.target.value })} required={key !== 'company'} />)}<select value={quote.service_interest} onChange={(e) => setQuote({ ...quote, service_interest: e.target.value })}><option value="">Servico de interesse</option>{services.map((item) => <option key={item.id}>{item.title}</option>)}</select><textarea placeholder="Descreva sua necessidade, prazo, equipamento ou setor da planta" value={quote.message} onChange={(e) => setQuote({ ...quote, message: e.target.value })} required /><button className="btn primary">Enviar pelo WhatsApp</button>{sent && <p className="ok">{sent}</p>}</form></section></>;
 }
-
 function MapLocation({ data }) {
   const settings = officialSettings(data.settings || {});
   return <section className="map-card"><div><span>Localizacao</span><h2>Sud Mennucci - Sao Paulo</h2><p>{settings.address || DEFAULT_ADDRESS}</p><a className="btn outline" href={mapsUrl(settings)} target="_blank" rel="noreferrer"><MapPin size={17} /> Abrir no Google Maps</a></div><aside><MapPin size={48} /><b>Atendimento nacional</b><small>Base industrial em Sud Mennucci-SP e experiencia com mais de 100 usinas de acucar e alcool.</small></aside></section>;
@@ -570,7 +586,7 @@ function PublicSite() {
   useEffect(() => { api('/public/bootstrap').then(setData).catch(() => {}); }, []);
   const current = window.location.pathname.replace(/\/$/, '') || '/';
   useEffect(() => {
-    const targets = document.querySelectorAll('.home-strip,.quick-links,.overview-band,.page-grid,.gallery-grid,.video-grid,.content-split,.timeline-section,.product-list,.client-section,.contact-page,.service-card,.portfolio-card,.info-card,.impact-strip article,.catalog-cta,.detail-page,.process-flow,.process-track article,.project-highlights,.project-highlights article,.final-cta,.map-card,.proof-section,.proof-grid article,.service-commerce-card,.catalog-page,.catalog-card,.gallery-showcase,.gallery-mosaic figure,.capability-section,.capability-grid article,.faq-section,.faq-list details,.quote-checklist,.next-steps article,.footer-pro,.about-hero,.about-metrics article,.about-story,.about-pillars article,.about-timeline article,.about-reasons article');
+    const targets = document.querySelectorAll('.home-strip,.quick-links,.overview-band,.page-grid,.gallery-grid,.video-grid,.content-split,.timeline-section,.product-list,.client-section,.contact-page,.service-card,.portfolio-card,.info-card,.impact-strip article,.catalog-cta,.detail-page,.process-flow,.process-track article,.project-highlights,.project-highlights article,.final-cta,.map-card,.proof-section,.proof-grid article,.service-commerce-card,.catalog-page,.catalog-card,.gallery-showcase,.gallery-mosaic figure,.capability-section,.capability-grid article,.faq-section,.faq-list details,.quote-checklist,.next-steps article,.footer-pro,.about-hero,.about-metrics article,.about-story,.about-pillars article,.about-timeline article,.about-reasons article,.sector-showcase,.sector-grid article,.sector-proof article,.clients-premium,.clients-grid article,.client-process article,.contact-channels article,.quote-form');
     targets.forEach((target) => target.classList.add('reveal'));
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
