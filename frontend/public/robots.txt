@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.imecmetalurgica.com.br/sitemap.xml
