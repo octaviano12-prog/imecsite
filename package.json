@@ -8,6 +8,7 @@
     "postinstall": "npm install --prefix frontend",
     "dev": "concurrently \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\"",
     "install:all": "npm install && npm install --prefix frontend",
+    "create-admin": "node backend/src/createAdmin.js",
     "build": "npm install --prefix frontend && npm --prefix frontend run build",
     "start": "node index.js"
   },
