@@ -164,6 +164,20 @@ const serviceSalesNotes = [
 
 const productTags = ['Etanol', 'Acucar', 'Energia', 'Utilidades', 'Paradas', 'Processo'];
 
+const capabilityMatrix = [
+  { icon: Factory, title: 'Fabrica e campo no mesmo raciocinio', text: 'A solucao ja nasce pensando em fabricacao, montagem, manutencao e operacao real da planta.' },
+  { icon: ShieldCheck, title: 'Seguranca para decisao tecnica', text: 'Conteudo organizado para engenharia, compras e diretoria entenderem escopo, risco e proximo passo.' },
+  { icon: Users, title: 'Atendimento sem distancia', text: 'Contato direto com a equipe, leitura rapida da necessidade e encaminhamento objetivo para orcamento.' },
+  { icon: Gauge, title: 'Foco em continuidade operacional', text: 'Projetos, reformas e equipamentos com foco em reduzir parada, retrabalho e perda de desempenho.' }
+];
+
+const faqItems = [
+  ['A IMEC atende fora de Sud Mennucci?', 'Sim. A empresa tem base em Sud Mennucci-SP e experiencia nacional com usinas, destilarias, energia e industria alimenticia.'],
+  ['O atendimento e apenas para produtos novos?', 'Nao. A IMEC tambem atua com manutencao, reforma, montagem industrial, suporte tecnico e melhorias em equipamentos existentes.'],
+  ['Como comecar um orcamento?', 'O melhor caminho e enviar pelo WhatsApp a necessidade, local da planta, prazo desejado e fotos ou documentos tecnicos disponiveis.'],
+  ['A empresa fornece documentacao tecnica?', 'Sim. A proposta pode envolver engenharia, documentacao, orientacao tecnica e acompanhamento conforme o tipo de solucao contratada.']
+];
+
 const serviceDetails = {
   'montagem-industrial': {
     description: 'Planejamento, fabricacao e montagem de equipamentos, tubulacoes, estruturas e plantas industriais para operacoes sucroalcooleiras, energia e utilidades.',
@@ -270,12 +284,13 @@ function Header({ settings, current }) {
   const nav = [
     ['/', 'Home'], ['/quem-somos', 'Empresa'], ['/servicos', 'Serviços'], ['/produtos', 'Produtos'], ['/setores', 'Setores'], ['/clientes', 'Clientes'], ['/contato', 'Contato']
   ];
+  const isActive = (href) => href === '/' ? current === '/' : current === href || current.startsWith(`${href}/`);
   return <header className="topbar">
     <Logo settings={settings} />
     <button className="menu" onClick={() => setOpen(!open)} aria-label="Menu">{open ? <X /> : <Menu />}</button>
-    <nav className={open ? 'open' : ''}>{nav.map(([href, label]) => <a className={current === href ? 'active' : ''} href={href} key={href}>{label}</a>)}</nav>
+    <nav className={open ? 'open' : ''}>{nav.map(([href, label]) => <a className={isActive(href) ? 'active' : ''} aria-current={isActive(href) ? 'page' : undefined} href={href} key={href} onClick={() => setOpen(false)}>{label}</a>)}</nav>
     <div className="top-actions">
-      <a className="phone" href={`tel:${settings?.phone || DEFAULT_PHONE}`}><Phone size={16} /> {settings?.phone || DEFAULT_PHONE}</a>
+      <a className="phone" href={`tel:${settings.phone || DEFAULT_PHONE}`}><Phone size={16} /> {settings.phone || DEFAULT_PHONE}</a>
       <a className="btn primary" href={whatsappUrl(settings)} target="_blank" rel="noreferrer"><MessageCircle size={16} /> Solicitar Orçamento</a>
     </div>
   </header>;
@@ -285,8 +300,8 @@ function Footer({ settings }) {
   return <footer className="footer">
     <div><Logo settings={settings} /><p>Soluções industriais com engenharia, tecnologia e confiança.</p><small className="version-tag">{SITE_VERSION}</small></div>
     <div><h4>Navegação</h4><a href="/">Home</a><a href="/quem-somos">Empresa</a><a href="/servicos">Serviços</a><a href="/produtos">Produtos</a><a href="/setores">Setores</a><a href="/clientes">Clientes</a><a href="/trabalhe-conosco">Trabalhe conosco</a></div>
-    <div><h4>Contato</h4><span>{settings?.phone || DEFAULT_PHONE}</span><span>{settings?.email || DEFAULT_EMAIL}</span><span>{settings?.address || DEFAULT_ADDRESS}</span><a href={whatsappUrl(settings)}>Chamar no WhatsApp</a></div>
-    <div><h4>Redes sociais</h4><div className="socials"><a href={settings?.linkedin_url || '#'}><Linkedin size={18} /></a><a href={settings?.instagram_url || '#'}><Instagram size={18} /></a><a href={settings?.youtube_url || '#'}><Youtube size={18} /></a></div></div>
+    <div><h4>Contato</h4><span>{settings.phone || DEFAULT_PHONE}</span><span>{settings.email || DEFAULT_EMAIL}</span><span>{settings.address || DEFAULT_ADDRESS}</span><a href={whatsappUrl(settings)}>Chamar no WhatsApp</a></div>
+    <div><h4>Redes sociais</h4><div className="socials"><a href={settings.linkedin_url || '#'}><Linkedin size={18} /></a><a href={settings.instagram_url || '#'}><Instagram size={18} /></a><a href={settings.youtube_url || '#'}><Youtube size={18} /></a></div></div>
     <a className="admin-link" href="/admin"><Lock size={14} /> Painel administrativo</a>
   </footer>;
 }
@@ -358,6 +373,20 @@ function ProofSection() {
   </section>;
 }
 
+function CapabilitySection() {
+  return <section className="capability-section">
+    <div className="capability-heading"><span>Capacidade IMEC</span><h2>Do primeiro contato ao equipamento operando</h2><p>Mais do que listar servicos, esta area mostra como a IMEC ajuda o cliente a tomar decisao com seguranca tecnica e comercial.</p></div>
+    <div className="capability-grid">{capabilityMatrix.map((item) => { const Icon = item.icon; return <article key={item.title}><Icon /><h3>{item.title}</h3><p>{item.text}</p></article>; })}</div>
+  </section>;
+}
+
+function FaqSection({ settings }) {
+  return <section className="faq-section">
+    <div><span>Duvidas frequentes</span><h2>Antes do orcamento, o cliente ja entende o caminho</h2><p>Respostas curtas reduzem atrito e ajudam o visitante a chamar a IMEC com as informacoes certas.</p><a className="btn primary" href={whatsappUrl(settings, 'Ola! Tenho uma duvida e gostaria de falar com a IMEC Metalurgica.')} target="_blank" rel="noreferrer"><MessageCircle size={17} /> Tirar duvida no WhatsApp</a></div>
+    <div className="faq-list">{faqItems.map(([question, answer]) => <details key={question}><summary>{question}</summary><p>{answer}</p></details>)}</div>
+  </section>;
+}
+
 function FinalCta({ settings }) {
   return <section className="final-cta"><span>Atendimento tecnico</span><h2>Precisa fabricar, reformar ou montar um equipamento industrial?</h2><p>Fale com a equipe da IMEC para avaliar sua necessidade com engenharia, prazo e responsabilidade tecnica.</p><div><a className="btn primary" href={whatsappUrl(settings)} target="_blank" rel="noreferrer"><MessageCircle size={17} /> Solicitar orcamento</a><a className="btn outline" href="/catalogo-imec.html" target="_blank" rel="noreferrer"><Download size={17} /> Ver catalogo</a></div></section>;
 }
@@ -381,6 +410,8 @@ function Home({ data }) {
     <section className="home-strip portfolio-strip"><div className="strip-title"><span>Produtos</span><h2>Equipamentos para processo, energia e utilidades</h2><a href="/produtos">Ver produtos <ChevronRight size={16} /></a></div><div className="portfolio-row">{portfolio.slice(0, 6).map((item) => <PortfolioCard item={item} key={item.id} />)}</div></section>
     <section className="quick-links" style={{ backgroundImage: `linear-gradient(90deg,rgba(4,14,24,.94),rgba(8,31,52,.92)),url(${footerImage})` }}><a href="/produtos"><Factory /><b>Produtos</b><small>Equipamentos para usinas, destilação e tratamento de fuligem.</small></a><a href="/setores"><Building2 /><b>Setores</b><small>Etanol, açúcar, energia e indústria alimentícia.</small></a><a href={whatsappUrl(settings)} target="_blank" rel="noreferrer"><UserCircle /><b>Orçamento</b><small>Fale com a equipe técnica da IMEC pelo WhatsApp.</small></a></section>
     <section className="overview-band"><div><span>Referência nacional</span><h2>Mais de 100 usinas atendidas</h2><p>A IMEC reúne experiência no setor sucroalcooleiro, comunicação direta com o cliente e acompanhamento de performance após a entrega.</p></div><div className="overview-grid">{differentials.map((item) => <InfoCard key={item.title} {...item} />)}</div></section>
+    <CapabilitySection />
+    <FaqSection settings={settings} />
     <FinalCta settings={settings} />
   </>;
 }
@@ -440,12 +471,12 @@ function Gallery({ data }) {
 
 function PremiumServices({ data }) {
   const services = officialServices(data.services || []);
-  return <><PageTitle eyebrow="Servicos" title="Servicos industriais com engenharia, campo e suporte tecnico" text="Uma leitura mais rapida para quem esta comparando fornecedores: onde a IMEC atua, qual dor resolve e qual resultado entrega." /><section className="service-commerce-grid">{services.map((item, index) => { const Icon = iconMap[item.icon] || Factory; const note = serviceSalesNotes[index % serviceSalesNotes.length]; return <article className="service-commerce-card" key={item.id}><div><Icon /><span>{String(index + 1).padStart(2, '0')}</span></div><h3>{item.title || note[0]}</h3><p>{item.short_description || note[1]}</p><dl><dt>Cenario</dt><dd>{note[1]}</dd><dt>Entrega</dt><dd>{note[2]}</dd></dl><a href={`/servicos/${item.slug || slugifyTitle(item.title)}`}>Ver detalhes <ChevronRight size={15} /></a></article>; })}</section><FinalCta settings={officialSettings(data.settings || {})} /></>;
+  return <><PageTitle eyebrow="Servicos" title="Servicos industriais com engenharia, campo e suporte tecnico" text="Uma leitura mais rapida para quem esta comparando fornecedores: onde a IMEC atua, qual dor resolve e qual resultado entrega." /><section className="service-commerce-grid">{services.map((item, index) => { const Icon = iconMap[item.icon] || Factory; const note = serviceSalesNotes[index % serviceSalesNotes.length]; return <article className="service-commerce-card" key={item.id}><div><Icon /><span>{String(index + 1).padStart(2, '0')}</span></div><h3>{item.title || note[0]}</h3><p>{item.short_description || note[1]}</p><dl><dt>Cenario</dt><dd>{note[1]}</dd><dt>Entrega</dt><dd>{note[2]}</dd></dl><a href={`/servicos/${item.slug || slugifyTitle(item.title)}`}>Ver detalhes <ChevronRight size={15} /></a></article>; })}</section><CapabilitySection /><FaqSection settings={officialSettings(data.settings || {})} /><FinalCta settings={officialSettings(data.settings || {})} /></>;
 }
 
 function PremiumProducts({ data }) {
   const products = officialPortfolio(data.portfolio || []);
-  return <><PageTitle eyebrow="Produtos e Equipamentos" title="Catalogo industrial para etanol, acucar, energia e utilidades" text="Equipamentos apresentados com imagem, aplicacao e caminho direto para conversa tecnica. A pagina fica mais comercial e menos parecida com uma lista simples." /><section className="catalog-page"><div className="catalog-intro"><span>Catalogo IMEC</span><h2>Escolha o equipamento e avance para a especificacao</h2><p>Para cada item, o visitante entende aplicacao, contexto de uso e consegue pedir atendimento com uma mensagem pronta pelo WhatsApp.</p><a className="btn outline" href="/catalogo-imec.html" target="_blank" rel="noreferrer"><Download size={17} /> Abrir catalogo digital</a></div><div className="catalog-grid">{products.map((item, index) => <article className="catalog-card" key={item.id}><img src={assetUrl(item.cover_image_url || item.image_url || heroImage)} alt={item.title} loading="lazy" decoding="async" /><div><span>{item.category || 'Equipamento industrial'}</span><h3>{item.title}</h3><p>{item.description || item.short_description || 'Solucao industrial para usinas, energia e processos produtivos que exigem robustez e suporte tecnico.'}</p><ul>{productTags.slice(index % 3, index % 3 + 3).map((tag) => <li key={tag}>{tag}</li>)}</ul><div className="catalog-actions"><a href={`/produtos/${item.slug || slugifyTitle(item.title)}`}>Detalhes <ChevronRight size={15} /></a><a href={whatsappUrl(officialSettings(data.settings || {}), `Ola! Quero informacoes sobre ${item.title} da IMEC Metalurgica.`)} target="_blank" rel="noreferrer">Orcar</a></div></div></article>)}</div></section></>;
+  return <><PageTitle eyebrow="Produtos e Equipamentos" title="Catalogo industrial para etanol, acucar, energia e utilidades" text="Equipamentos apresentados com imagem, aplicacao e caminho direto para conversa tecnica. A pagina fica mais comercial e menos parecida com uma lista simples." /><section className="catalog-page"><div className="catalog-intro"><span>Catalogo IMEC</span><h2>Escolha o equipamento e avance para a especificacao</h2><p>Para cada item, o visitante entende aplicacao, contexto de uso e consegue pedir atendimento com uma mensagem pronta pelo WhatsApp.</p><a className="btn outline" href="/catalogo-imec.html" target="_blank" rel="noreferrer"><Download size={17} /> Abrir catalogo digital</a></div><div className="catalog-grid">{products.map((item, index) => <article className="catalog-card" key={item.id}><img src={assetUrl(item.cover_image_url || item.image_url || heroImage)} alt={item.title} loading="lazy" decoding="async" /><div><span>{item.category || 'Equipamento industrial'}</span><h3>{item.title}</h3><p>{item.description || item.short_description || 'Solucao industrial para usinas, energia e processos produtivos que exigem robustez e suporte tecnico.'}</p><ul>{productTags.slice(index % 3, index % 3 + 3).map((tag) => <li key={tag}>{tag}</li>)}</ul><div className="catalog-actions"><a href={`/produtos/${item.slug || slugifyTitle(item.title)}`}>Detalhes <ChevronRight size={15} /></a><a href={whatsappUrl(officialSettings(data.settings || {}), `Ola! Quero informacoes sobre ${item.title} da IMEC Metalurgica.`)} target="_blank" rel="noreferrer">Orcar</a></div></div></article>)}</div></section><FaqSection settings={officialSettings(data.settings || {})} /></>;
 }
 
 function PremiumDetailPage({ eyebrow, item, settings, backHref }) {
@@ -465,8 +496,8 @@ function PremiumGallery({ data }) {
 
 function PremiumFooter({ settings }) {
   return <footer className="footer-pro">
-    <div className="footer-main"><div><Logo settings={settings} /><p>Engenharia, fabricacao, montagem e manutencao para operacoes industriais que exigem confiabilidade.</p><div className="footer-badges"><span>Desde 1998</span><span>100+ usinas</span><span>Fornecedor BNDES</span></div></div><div><h4>Atalhos</h4><a href="/servicos">Servicos</a><a href="/produtos">Produtos</a><a href="/setores">Setores</a><a href="/clientes">Clientes</a><a href="/contato">Contato</a></div><div><h4>Solucoes</h4><a href="/servicos/montagem-industrial">Montagem industrial</a><a href="/servicos/manutencao-de-equipamentos">Manutencao de equipamentos</a><a href="/produtos/colunas-de-destilacao">Colunas de destilacao</a><a href="/catalogo-imec.html" target="_blank" rel="noreferrer">Catalogo digital</a></div><div><h4>Contato</h4><span><Phone size={15} /> {settings?.phone || DEFAULT_PHONE}</span><span><Mail size={15} /> {settings?.email || DEFAULT_EMAIL}</span><span><MapPin size={15} /> {settings?.address || DEFAULT_ADDRESS}</span><a className="footer-whatsapp" href={whatsappUrl(settings)} target="_blank" rel="noreferrer"><MessageCircle size={15} /> Chamar no WhatsApp</a></div></div>
-    <div className="footer-bottom"><span>{SITE_VERSION}</span><a href="/admin"><Lock size={14} /> Painel administrativo</a><div className="socials"><a href={settings?.linkedin_url || '#'}><Linkedin size={18} /></a><a href={settings?.instagram_url || '#'}><Instagram size={18} /></a><a href={settings?.youtube_url || '#'}><Youtube size={18} /></a></div></div>
+    <div className="footer-main"><div><Logo settings={settings} /><p>Engenharia, fabricacao, montagem e manutencao para operacoes industriais que exigem confiabilidade.</p><div className="footer-badges"><span>Desde 1998</span><span>100+ usinas</span><span>Fornecedor BNDES</span></div></div><div><h4>Atalhos</h4><a href="/servicos">Servicos</a><a href="/produtos">Produtos</a><a href="/setores">Setores</a><a href="/clientes">Clientes</a><a href="/contato">Contato</a></div><div><h4>Solucoes</h4><a href="/servicos/montagem-industrial">Montagem industrial</a><a href="/servicos/manutencao-de-equipamentos">Manutencao de equipamentos</a><a href="/produtos/colunas-de-destilacao">Colunas de destilacao</a><a href="/catalogo-imec.html" target="_blank" rel="noreferrer">Catalogo digital</a></div><div><h4>Contato</h4><span><Phone size={15} /> {settings.phone || DEFAULT_PHONE}</span><span><Mail size={15} /> {settings.email || DEFAULT_EMAIL}</span><span><MapPin size={15} /> {settings.address || DEFAULT_ADDRESS}</span><a className="footer-whatsapp" href={whatsappUrl(settings)} target="_blank" rel="noreferrer"><MessageCircle size={15} /> Chamar no WhatsApp</a></div></div>
+    <div className="footer-bottom"><span>{SITE_VERSION}</span><a href="/admin"><Lock size={14} /> Painel administrativo</a><div className="socials"><a href={settings.linkedin_url || '#'}><Linkedin size={18} /></a><a href={settings.instagram_url || '#'}><Instagram size={18} /></a><a href={settings.youtube_url || '#'}><Youtube size={18} /></a></div></div>
   </footer>;
 }
 
@@ -512,7 +543,7 @@ function PublicSite() {
   useEffect(() => { api('/public/bootstrap').then(setData).catch(() => {}); }, []);
   const current = window.location.pathname.replace(/\/$/, '') || '/';
   useEffect(() => {
-    const targets = document.querySelectorAll('.home-strip,.quick-links,.overview-band,.page-grid,.gallery-grid,.video-grid,.content-split,.timeline-section,.product-list,.client-section,.contact-page,.service-card,.portfolio-card,.info-card,.impact-strip article,.catalog-cta,.detail-page,.process-flow,.process-track article,.project-highlights,.project-highlights article,.final-cta,.map-card,.proof-section,.proof-grid article,.service-commerce-card,.catalog-page,.catalog-card,.gallery-showcase,.gallery-mosaic figure,.footer-pro');
+    const targets = document.querySelectorAll('.home-strip,.quick-links,.overview-band,.page-grid,.gallery-grid,.video-grid,.content-split,.timeline-section,.product-list,.client-section,.contact-page,.service-card,.portfolio-card,.info-card,.impact-strip article,.catalog-cta,.detail-page,.process-flow,.process-track article,.project-highlights,.project-highlights article,.final-cta,.map-card,.proof-section,.proof-grid article,.service-commerce-card,.catalog-page,.catalog-card,.gallery-showcase,.gallery-mosaic figure,.capability-section,.capability-grid article,.faq-section,.faq-list details,.footer-pro');
     targets.forEach((target) => target.classList.add('reveal'));
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -538,7 +569,18 @@ function PublicSite() {
       '/contato': 'Contato - IMEC Metalúrgica',
     };
     document.title = titles[current] || (current.startsWith('/servicos/') ? 'Servico - IMEC Metalurgica' : current.startsWith('/produtos/') ? 'Produto - IMEC Metalurgica' : titles['/']);
-    const description = 'IMEC Metalurgica: solucoes industriais, montagem, manutencao, projetos e equipamentos para usinas de etanol, acucar e energia.';
+    const descriptions = {
+      '/': 'IMEC Metalurgica: engenharia, fabricacao, montagem, manutencao e equipamentos para usinas de etanol, acucar, energia e processos industriais.',
+      '/quem-somos': 'Conheca a IMEC Metalurgica, empresa de Sud Mennucci-SP com experiencia desde 1998 no setor sucroalcooleiro e industrial.',
+      '/servicos': 'Servicos industriais da IMEC: montagem, suporte tecnico, manutencao de equipamentos, projetos e movimentacao para plantas industriais.',
+      '/produtos': 'Catalogo de equipamentos IMEC para etanol, acucar, energia, destilacao, tratamento de fuligem, levedura, tanques e trocadores de calor.',
+      '/setores': 'Setores atendidos pela IMEC Metalurgica: usinas, destilarias, energia, utilidades, industria alimenticia e plantas industriais.',
+      '/clientes': 'Experiencia da IMEC com mais de 100 usinas atendidas, relacionamento tecnico e acompanhamento de performance em campo.',
+      '/galeria': 'Galeria IMEC com registros de fabricacao, montagem, manutencao e equipamentos industriais para usinas e plantas de processo.',
+      '/videos': 'Videos da IMEC Metalurgica com projetos, bastidores, processos industriais e conteudos tecnicos.',
+      '/contato': 'Fale com a IMEC Metalurgica para solicitar orcamento de equipamentos, montagem, manutencao, projetos e suporte tecnico.'
+    };
+    const description = descriptions[current] || (current.startsWith('/servicos/') ? 'Detalhes de servico industrial da IMEC Metalurgica para operacoes de etanol, acucar, energia e plantas industriais.' : current.startsWith('/produtos/') ? 'Detalhes de produto e equipamento industrial da IMEC Metalurgica para usinas, energia e processos produtivos.' : descriptions['/']);
     let meta = document.querySelector('meta[name="description"]');
     if (!meta) {
       meta = document.createElement('meta');
@@ -567,6 +609,13 @@ function PublicSite() {
       document.head.appendChild(ogDescription);
     }
     ogDescription.setAttribute('content', description);
+    let ogImage = document.querySelector('meta[property="og:image"]');
+    if (!ogImage) {
+      ogImage = document.createElement('meta');
+      ogImage.setAttribute('property', 'og:image');
+      document.head.appendChild(ogImage);
+    }
+    ogImage.setAttribute('content', `${window.location.origin}/og-image.jpg`);
     const settings = officialSettings(data.settings || {});
     const jsonLd = {
       '@context': 'https://schema.org',
@@ -601,7 +650,7 @@ function PublicSite() {
     if (current === '/trabalhe-conosco') return <WorkWithUs />;
     if (current === '/galeria') return <PremiumGallery data={data} />;
     if (current === '/videos') return <Videos data={data} />;
-    if (current === '/contato') return <><Contact data={data} /><MapLocation data={data} /></>;
+    if (current === '/contato') return <><Contact data={data} /><MapLocation data={data} /><FaqSection settings={officialSettings(data.settings || {})} /></>;
     return <Home data={data} />;
   }, [current, data]);
   const settings = officialSettings(data.settings || {});
@@ -656,7 +705,7 @@ function Crud({ resource, items, save, remove, upload }) {
   const blank = { is_active: 1, display_order: 0 };
   const [cur, setCur] = useState(blank);
   const preview = cur.image_url || cur.cover_image_url;
-  return <div className="crud"><form className="form" onSubmit={(e) => { e.preventDefault(); save(resource, cur); setCur(blank); }}>{fields[resource].filter((f) => !['name', 'company', 'email', 'phone', 'message', 'service_interest'].includes(f) || resource !== 'quotes').map((f) => f.includes('description') || f === 'content' || f === 'message' ? <label key={f}>{f}<textarea value={cur[f] || ''} onChange={(e) => setCur({ ...cur, [f]: e.target.value })} /></label> : <label key={f}>{f}<input value={cur[f] ?? ''} onChange={(e) => setCur({ ...cur, [f]: e.target.value })} /></label>)}{preview && <img className="admin-preview" src={assetUrl(preview)} alt="Preview" />}{resource !== 'quotes' && <label className="upload"><Upload /> Upload<input type="file" accept="image/*" onChange={(e) => e.target.files[0] && upload(e.target.files[0], (url) => setCur({ ...cur, image_url: url, cover_image_url: url }))} /></label>}<div className="admin-form-actions"><button className="btn primary">Salvar</button><button className="btn outline" type="button" onClick={() => setCur(blank)}>Novo</button></div></form><div className="list">{items.map((i) => <article key={i.id}>{(i.image_url || i.cover_image_url) && <img src={assetUrl(i.image_url || i.cover_image_url)} alt="" />}<b>{i.title || i.name || i.email}</b><p>{i.short_description || i.youtube_url || i.message || i.status}</p><div><button onClick={() => setCur(i)}>Editar</button>{resource !== 'quotes' && <button className="danger" onClick={() => remove(resource, i)}>Excluir</button>}</div></article>)}</div></div>;
+  return <div className="crud"><form className="form" onSubmit={(e) => { e.preventDefault(); save(resource, cur); setCur(blank); }}>{fields[resource].filter((f) => !['name', 'company', 'email', 'phone', 'message', 'service_interest'].includes(f) || resource !== 'quotes').map((f) => f.includes('description') || f === 'content' || f === 'message' ? <label key={f}>{f}<textarea value={cur[f] || ''} onChange={(e) => setCur({ ...cur, [f]: e.target.value })} /></label> : <label key={f}>{f}<input value={cur[f] || ''} onChange={(e) => setCur({ ...cur, [f]: e.target.value })} /></label>)}{preview && <img className="admin-preview" src={assetUrl(preview)} alt="Preview" />}{resource !== 'quotes' && <label className="upload"><Upload /> Upload<input type="file" accept="image/*" onChange={(e) => e.target.files[0] && upload(e.target.files[0], (url) => setCur({ ...cur, image_url: url, cover_image_url: url }))} /></label>}<div className="admin-form-actions"><button className="btn primary">Salvar</button><button className="btn outline" type="button" onClick={() => setCur(blank)}>Novo</button></div></form><div className="list">{items.map((i) => <article key={i.id}>{(i.image_url || i.cover_image_url) && <img src={assetUrl(i.image_url || i.cover_image_url)} alt="" />}<b>{i.title || i.name || i.email}</b><p>{i.short_description || i.youtube_url || i.message || i.status}</p><div><button onClick={() => setCur(i)}>Editar</button>{resource !== 'quotes' && <button className="danger" onClick={() => remove(resource, i)}>Excluir</button>}</div></article>)}</div></div>;
 }
 
 createRoot(document.getElementById('root')).render(location.pathname.startsWith('/admin') ? <Admin /> : <PublicSite />);

@@ -1701,11 +1701,145 @@ body {
   color: var(--blue2);
 }
 
+.capability-section,
+.faq-section {
+  display: grid;
+  grid-template-columns: minmax(280px, 390px) 1fr;
+  gap: 30px;
+  padding: 64px 10vw;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, #06111d, #081827);
+}
+
+.capability-heading span,
+.faq-section > div:first-child span {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--blue2);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.capability-heading h2,
+.faq-section h2 {
+  margin: 0 0 14px;
+  color: #fff;
+  font-size: clamp(28px, 3vw, 42px);
+  line-height: 1.08;
+}
+
+.capability-heading p,
+.faq-section > div:first-child p {
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.capability-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.capability-grid article {
+  min-height: 210px;
+  padding: 24px;
+  background:
+    linear-gradient(155deg, rgba(22, 49, 76, .92), rgba(7, 19, 32, .96));
+  border: 1px solid rgba(156, 185, 216, .22);
+  border-radius: 6px;
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.capability-grid article:hover {
+  transform: translateY(-5px);
+  border-color: rgba(105, 180, 255, .62);
+  box-shadow: 0 24px 54px rgba(0, 0, 0, .28);
+}
+
+.capability-grid svg {
+  width: 42px;
+  height: 42px;
+  color: var(--warm);
+  margin-bottom: 22px;
+}
+
+.capability-grid h3 {
+  margin: 0 0 10px;
+  color: #fff;
+  line-height: 1.12;
+}
+
+.capability-grid p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.faq-section {
+  background:
+    linear-gradient(90deg, rgba(5, 16, 27, .98), rgba(8, 26, 43, .96)),
+    url('./assets/imec/footer-industrial.jpg') center/cover;
+}
+
+.faq-section .btn {
+  margin-top: 12px;
+}
+
+.faq-list {
+  display: grid;
+  gap: 12px;
+}
+
+.faq-list details {
+  background: rgba(5, 16, 27, .82);
+  border: 1px solid rgba(156, 185, 216, .22);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.faq-list summary {
+  cursor: pointer;
+  padding: 18px 20px;
+  color: #fff;
+  font-weight: 900;
+  list-style: none;
+}
+
+.faq-list summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-list summary:after {
+  content: "+";
+  float: right;
+  color: var(--blue2);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.faq-list details[open] summary:after {
+  content: "-";
+}
+
+.faq-list p {
+  margin: 0;
+  padding: 0 20px 18px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.topbar nav a[aria-current="page"] {
+  color: #fff;
+}
+
 @media (max-width: 1180px) {
   .proof-section,
   .catalog-page,
   .gallery-showcase,
-  .footer-main {
+  .footer-main,
+  .capability-section,
+  .faq-section {
     grid-template-columns: 1fr;
   }
 
@@ -1725,6 +1859,8 @@ body {
   .service-commerce-grid,
   .catalog-page,
   .gallery-showcase,
+  .capability-section,
+  .faq-section,
   .footer-main,
   .footer-bottom {
     padding-left: 5vw;
@@ -1735,6 +1871,7 @@ body {
   .service-commerce-grid,
   .catalog-grid,
   .detail-specs,
+  .capability-grid,
   .gallery-mosaic {
     grid-template-columns: 1fr;
   }
