@@ -37,7 +37,7 @@ cp frontend/.env.example frontend/.env
 Crie o administrador:
 
 ```bash
-npm --prefix backend run create-admin -- "Administrador" "admin@imec.com.br" "Admin@123"
+npm run create-admin -- "Administrador" "admin@imec.com.br" "Admin@123"
 ```
 
 Rode o projeto:
@@ -89,7 +89,7 @@ Banco MySQL:
 3. Crie o admin pelo terminal/SSH, se disponivel:
 
 ```bash
-npm --prefix backend run create-admin -- "Administrador" "seu-email@dominio.com" "sua-senha-segura"
+npm run create-admin -- "Administrador" "seu-email@dominio.com" "sua-senha-segura"
 ```
 
 ## Se o admin abrir mas o login der 503
@@ -107,6 +107,31 @@ Confira nesta ordem:
 7. Depois de corrigir, reinicie a aplicacao Node na Hostinger.
 
 O frontend usa `/api` automaticamente em producao. Em desenvolvimento, usa `http://localhost:3333/api`.
+
+## Se o admin abrir mas o login der 401
+
+Esse erro significa que a API respondeu, mas o usuario ou senha do banco nao conferem.
+
+Correcao rapida pelo phpMyAdmin da Hostinger:
+
+1. Abra o banco MySQL do site.
+2. Selecione o banco correto no phpMyAdmin.
+3. Importe o arquivo `database/reset-admin.sql`.
+4. Reinicie a aplicacao Node na Hostinger.
+5. Entre novamente com:
+
+```txt
+E-mail: admin@imec.com.br
+Senha: Admin@123
+```
+
+Se tiver terminal/SSH disponivel, rode na raiz do projeto:
+
+```bash
+npm run create-admin -- "Administrador" "admin@imec.com.br" "Admin@123"
+```
+
+Depois de entrar, troque a senha inicial se criar uma tela para gerenciar usuarios ou rode o comando acima com uma senha mais forte.
 
 ## Build
 

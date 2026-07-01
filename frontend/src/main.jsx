@@ -70,7 +70,11 @@ async function api(path, options = {}) {
   if (token) headers.Authorization = `Bearer ${token}`;
   const response = await fetch(`${API}${path}`, { ...options, headers: { ...headers, ...(options.headers || {}) } });
   const data = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(data.message || 'Erro na ação.');
+  if (!response.ok) {
+    const error = new Error(data.message || 'Erro na ação.');
+    error.status = response.status;
+    throw error;
+  }
   return data;
 }
 
@@ -720,7 +724,11 @@ function Admin() {
       localStorage.setItem('imec_token', d.token);
       setToken(d.token);
     } catch (error) {
-      setMsg(`${error.message} Em desenvolvimento, rode tambem o backend na porta 3333. Em producao, o app Node precisa responder em /api.`);
+      if (error.status === 401) {
+        setMsg('E-mail ou senha invalidos. No Hostinger, importe database/reset-admin.sql pelo phpMyAdmin ou rode npm run create-admin -- "Administrador" "admin@imec.com.br" "Admin@123" e tente novamente.');
+      } else {
+        setMsg(`${error.message} Em desenvolvimento, rode tambem o backend na porta 3333. Em producao, o app Node precisa responder em /api.`);
+      }
     }
   }
   if (!token) return <main className="login"><form onSubmit={enter}><Logo /><h1>Painel Administrativo</h1><p>Entre para atualizar textos, servicos, produtos, fotos, videos e pedidos de orcamento.</p><input placeholder="E-mail" value={login.email} onChange={(e) => setLogin({ ...login, email: e.target.value })} /><input placeholder="Senha" type="password" value={login.password} onChange={(e) => setLogin({ ...login, password: e.target.value })} /><button className="btn primary">Entrar</button><a className="btn outline" href="/">Voltar ao site</a>{msg && <p className="admin-warning">{msg}</p>}</form></main>;
