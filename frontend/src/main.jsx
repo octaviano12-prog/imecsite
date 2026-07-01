@@ -74,6 +74,16 @@ async function api(path, options = {}) {
   return data;
 }
 
+async function apiHealth() {
+  try {
+    const response = await fetch(`${API}/health`, { headers: { Accept: 'application/json' } });
+    if (!response.ok) throw new Error(`status ${response.status}`);
+    return { ok: true, message: 'API conectada.' };
+  } catch {
+    return { ok: false, message: 'API indisponivel. No Hostinger, confirme se o aplicativo Node.js esta iniciado e se /api/health abre no navegador.' };
+  }
+}
+
 const iconMap = { Factory, Wrench, Settings, Building2, Gauge, HardHat, Camera };
 const fallbackServices = [
   { id: 's1', title: 'Montagem Industrial', short_description: 'Montagem de equipamentos, plantas e conjuntos para usinas de etanol, açúcar e energia.', icon: 'Factory' },
@@ -542,29 +552,33 @@ function Admin() {
     e.preventDefault();
     setMsg('');
     try {
+      const health = await apiHealth();
+      if (!health.ok) throw new Error(health.message);
       const d = await api('/auth/login', { method: 'POST', body: JSON.stringify(login) });
       localStorage.setItem('imec_token', d.token);
       setToken(d.token);
     } catch (error) {
-      setMsg(`${error.message} Se estiver em desenvolvimento, inicie tambem o backend na porta 3333.`);
+      setMsg(`${error.message} Em desenvolvimento, rode tambem o backend na porta 3333. Em producao, o app Node precisa responder em /api.`);
     }
   }
   if (!token) return <main className="login"><form onSubmit={enter}><Logo /><h1>Painel Administrativo</h1><p>Entre para atualizar textos, servicos, produtos, fotos, videos e pedidos de orcamento.</p><input placeholder="E-mail" value={login.email} onChange={(e) => setLogin({ ...login, email: e.target.value })} /><input placeholder="Senha" type="password" value={login.password} onChange={(e) => setLogin({ ...login, password: e.target.value })} /><button className="btn primary">Entrar</button><a className="btn outline" href="/">Voltar ao site</a>{msg && <p className="admin-warning">{msg}</p>}</form></main>;
   async function saveSettings(e) { e.preventDefault(); await api('/admin/settings', { method: 'PUT', body: JSON.stringify(state.settings) }); setMsg('Salvo.'); }
   async function upload(file, cb) { const fd = new FormData(); fd.append('file', file); const d = await api('/admin/upload', { method: 'POST', body: fd }); cb(d.url); }
   async function save(resource, item) { await api(`/admin/${resource}${item.id ? '/' + item.id : ''}`, { method: item.id ? 'PUT' : 'POST', body: JSON.stringify(item) }); await load(); setMsg('Salvo.'); }
-  return <main className="admin"><aside><Logo /><a className="admin-site-link" href="/">Ver site</a>{tabs.map((x) => <button className={tab === x ? 'active' : ''} onClick={() => setTab(x)} key={x}>{labels[x]}</button>)}<button onClick={load}>Recarregar</button><button onClick={() => { localStorage.clear(); setToken(''); }}>Sair</button></aside><section><div className="admin-head"><span>Painel IMEC</span><h1>{labels[tab]}</h1><p>Gerencie o conteudo que aparece no site institucional.</p></div>{msg && <p className={msg === 'Salvo.' ? 'ok' : 'admin-warning'}>{msg}</p>}{tab === 'settings' ? <SettingsForm data={state.settings || {}} setData={(d) => setState({ ...state, settings: d })} save={saveSettings} upload={upload} /> : <Crud resource={tab} items={state[tab] || []} save={save} upload={upload} />}</section></main>;
+  async function remove(resource, item) { if (!item.id || resource === 'quotes') return; await api(`/admin/${resource}/${item.id}`, { method: 'DELETE' }); await load(); setMsg('Excluido.'); }
+  return <main className="admin"><aside><Logo /><a className="admin-site-link" href="/">Ver site</a>{tabs.map((x) => <button className={tab === x ? 'active' : ''} onClick={() => setTab(x)} key={x}>{labels[x]}<small>{Array.isArray(state[x]) ? state[x].length : ''}</small></button>)}<button onClick={load}>Recarregar</button><button onClick={() => { localStorage.clear(); setToken(''); }}>Sair</button></aside><section><div className="admin-head"><span>Painel IMEC</span><h1>{labels[tab]}</h1><p>Gerencie conteudo, imagens, paginas e pedidos do site institucional.</p></div>{msg && <p className={['Salvo.', 'Excluido.'].includes(msg) ? 'ok' : 'admin-warning'}>{msg}</p>}{tab === 'settings' ? <SettingsForm data={state.settings || {}} setData={(d) => setState({ ...state, settings: d })} save={saveSettings} upload={upload} /> : <Crud resource={tab} items={state[tab] || []} save={save} remove={remove} upload={upload} />}</section></main>;
 }
 
 function SettingsForm({ data, setData, save, upload }) {
-  return <form className="form" onSubmit={save}>{['company_name', 'phone', 'whatsapp', 'email', 'address', 'city', 'state', 'instagram_url', 'linkedin_url', 'youtube_url', 'facebook_url', 'logo_url', 'hero_image_url'].map((field) => <label key={field}>{field}<input value={data[field] || ''} onChange={(e) => setData({ ...data, [field]: e.target.value })} /></label>)}<label className="upload"><Upload /> Enviar banner<input type="file" accept="image/*" onChange={(e) => e.target.files[0] && upload(e.target.files[0], (url) => setData({ ...data, hero_image_url: url }))} /></label><button className="btn primary">Salvar</button></form>;
+  return <form className="form" onSubmit={save}>{['company_name', 'phone', 'whatsapp', 'email', 'address', 'city', 'state', 'instagram_url', 'linkedin_url', 'youtube_url', 'facebook_url', 'logo_url', 'hero_image_url'].map((field) => <label key={field}>{field}<input value={data[field] || ''} onChange={(e) => setData({ ...data, [field]: e.target.value })} /></label>)}{data.hero_image_url && <img className="admin-preview" src={assetUrl(data.hero_image_url)} alt="Preview do banner" />}<label className="upload"><Upload /> Enviar banner<input type="file" accept="image/*" onChange={(e) => e.target.files[0] && upload(e.target.files[0], (url) => setData({ ...data, hero_image_url: url }))} /></label><button className="btn primary">Salvar</button></form>;
 }
 
 const fields = { pages: ['slug', 'title', 'subtitle', 'content', 'image_url', 'is_active'], services: ['title', 'slug', 'short_description', 'description', 'icon', 'image_url', 'display_order', 'is_active'], portfolio: ['title', 'slug', 'category', 'location', 'year', 'short_description', 'description', 'cover_image_url', 'display_order', 'is_active'], categories: ['name', 'slug', 'display_order', 'is_active'], photos: ['category_id', 'title', 'image_url', 'alt_text', 'display_order', 'is_active'], videos: ['title', 'youtube_url', 'description', 'display_order', 'is_active'], quotes: ['name', 'company', 'email', 'phone', 'service_interest', 'message', 'status'] };
-function Crud({ resource, items, save, upload }) {
+function Crud({ resource, items, save, remove, upload }) {
   const blank = { is_active: 1, display_order: 0 };
   const [cur, setCur] = useState(blank);
-  return <div className="crud"><form className="form" onSubmit={(e) => { e.preventDefault(); save(resource, cur); setCur(blank); }}>{fields[resource].filter((f) => !['name', 'company', 'email', 'phone', 'message', 'service_interest'].includes(f) || resource !== 'quotes').map((f) => f.includes('description') || f === 'content' || f === 'message' ? <label key={f}>{f}<textarea value={cur[f] || ''} onChange={(e) => setCur({ ...cur, [f]: e.target.value })} /></label> : <label key={f}>{f}<input value={cur[f] ?? ''} onChange={(e) => setCur({ ...cur, [f]: e.target.value })} /></label>)}{resource !== 'quotes' && <label className="upload"><Upload /> Upload<input type="file" accept="image/*" onChange={(e) => e.target.files[0] && upload(e.target.files[0], (url) => setCur({ ...cur, image_url: url, cover_image_url: url }))} /></label>}<button className="btn primary">Salvar</button></form><div className="list">{items.map((i) => <article key={i.id}><b>{i.title || i.name || i.email}</b><p>{i.short_description || i.youtube_url || i.message}</p><button onClick={() => setCur(i)}>Editar</button></article>)}</div></div>;
+  const preview = cur.image_url || cur.cover_image_url;
+  return <div className="crud"><form className="form" onSubmit={(e) => { e.preventDefault(); save(resource, cur); setCur(blank); }}>{fields[resource].filter((f) => !['name', 'company', 'email', 'phone', 'message', 'service_interest'].includes(f) || resource !== 'quotes').map((f) => f.includes('description') || f === 'content' || f === 'message' ? <label key={f}>{f}<textarea value={cur[f] || ''} onChange={(e) => setCur({ ...cur, [f]: e.target.value })} /></label> : <label key={f}>{f}<input value={cur[f] ?? ''} onChange={(e) => setCur({ ...cur, [f]: e.target.value })} /></label>)}{preview && <img className="admin-preview" src={assetUrl(preview)} alt="Preview" />}{resource !== 'quotes' && <label className="upload"><Upload /> Upload<input type="file" accept="image/*" onChange={(e) => e.target.files[0] && upload(e.target.files[0], (url) => setCur({ ...cur, image_url: url, cover_image_url: url }))} /></label>}<div className="admin-form-actions"><button className="btn primary">Salvar</button><button className="btn outline" type="button" onClick={() => setCur(blank)}>Novo</button></div></form><div className="list">{items.map((i) => <article key={i.id}>{(i.image_url || i.cover_image_url) && <img src={assetUrl(i.image_url || i.cover_image_url)} alt="" />}<b>{i.title || i.name || i.email}</b><p>{i.short_description || i.youtube_url || i.message || i.status}</p><div><button onClick={() => setCur(i)}>Editar</button>{resource !== 'quotes' && <button className="danger" onClick={() => remove(resource, i)}>Excluir</button>}</div></article>)}</div></div>;
 }
 
 createRoot(document.getElementById('root')).render(location.pathname.startsWith('/admin') ? <Admin /> : <PublicSite />);
