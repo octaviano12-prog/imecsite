@@ -83,6 +83,15 @@ app.use(cors({ origin: env.appUrl, credentials: true }));
 app.use(express.json({ limit: '2mb' }));
 app.use('/uploads', express.static(uploadDir));
 
+app.get('/api/health', async (_req, res) => {
+  try {
+    await query('SELECT 1 AS ok');
+    res.json({ status: 'ok', app: 'IMEC Metalurgica API', database: 'ok' });
+  } catch {
+    res.status(503).json({ status: 'error', app: 'IMEC Metalurgica API', database: 'offline', message: 'Banco de dados indisponivel.' });
+  }
+});
+
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', app: 'IMEC Metalúrgica API' }));
 
 app.post('/api/auth/login', rateLimit({ windowMs: 15 * 60 * 1000, limit: 30 }), async (req, res) => {
