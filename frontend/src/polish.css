@@ -3443,8 +3443,8 @@ summary:focus-visible {
   gap: clamp(28px, 5vw, 90px);
   padding: clamp(86px, 8vw, 150px) var(--site-gutter) 34px;
   background:
-    linear-gradient(90deg, rgba(3,10,18,.98) 0%, rgba(5,17,30,.92) 43%, rgba(5,22,41,.58) 100%),
-    radial-gradient(circle at 80% 48%, rgba(38,136,255,.28), transparent 34%),
+    linear-gradient(90deg, rgba(3,10,18,.98) 0%, rgba(5,17,30,.9) 40%, rgba(5,22,41,.48) 100%),
+    radial-gradient(circle at 78% 46%, rgba(38,136,255,.36), transparent 33%),
     url('./assets/imec/footer-industrial.jpg') center right / cover;
   border-bottom: 1px solid var(--line);
 }
@@ -3479,6 +3479,13 @@ summary:focus-visible {
   color: #d6e7ff;
   font-size: clamp(17px, 1.25vw, 22px);
   line-height: 1.5;
+}
+
+.clients-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
 }
 
 .clients-hero-metrics {
@@ -3553,6 +3560,26 @@ summary:focus-visible {
   gap: 0 22px;
   min-height: 152px;
   padding: 22px;
+}
+
+.compact-clients .clients-grid article:before,
+.clients-highlight:before,
+.clients-final-cta:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(120deg, transparent 0 36%, rgba(105,180,255,.12), transparent 64%);
+  opacity: 0;
+  transform: translateX(-30%);
+  transition: opacity 220ms ease, transform 520ms ease;
+}
+
+.compact-clients .clients-grid article:hover:before,
+.clients-highlight:hover:before,
+.clients-final-cta:hover:before {
+  opacity: 1;
+  transform: translateX(30%);
 }
 
 .compact-clients .clients-grid article > svg {
@@ -3662,6 +3689,91 @@ summary:focus-visible {
 
 .clients-highlight span:last-child {
   grid-column: 1 / -1;
+}
+
+.clients-proof {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  padding: 0 var(--site-gutter);
+  background: var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.clients-proof article {
+  min-height: 126px;
+  padding: 24px 22px;
+  display: grid;
+  align-content: center;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(38,136,255,.18), transparent 45%),
+    linear-gradient(145deg, rgba(9,26,42,.98), rgba(6,17,29,.98));
+  text-align: center;
+}
+
+.clients-proof small {
+  color: #9eb6cf;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.clients-proof b {
+  color: #fff;
+  font-size: clamp(26px, 3vw, 44px);
+  line-height: 1.05;
+}
+
+.clients-proof span {
+  color: var(--blue2);
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.clients-final-cta {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  margin: 0;
+  padding: 42px var(--site-gutter);
+  background:
+    linear-gradient(90deg, rgba(5,16,27,.96), rgba(7,31,55,.86)),
+    url('./assets/imec/project-premium-shop.jpg') center / cover;
+  border-bottom: 1px solid var(--line);
+}
+
+.clients-final-cta span {
+  color: var(--blue2);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.clients-final-cta h2 {
+  max-width: 780px;
+  margin: 8px 0 8px;
+  color: #fff;
+  font-size: clamp(28px, 3.2vw, 48px);
+  line-height: 1.05;
+}
+
+.clients-final-cta p {
+  max-width: 740px;
+  margin: 0;
+  color: #c7daee;
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+.clients-final-cta .btn {
+  flex: 0 0 auto;
+  min-height: 52px;
+  position: relative;
+  z-index: 1;
 }
 
 .client-process {
@@ -3842,6 +3954,15 @@ summary:focus-visible {
     border-top: 1px solid rgba(180,207,236,.22);
   }
 
+  .clients-proof {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .clients-final-cta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   .sector-showcase,
   .clients-premium,
   .client-journey,
@@ -3890,6 +4011,18 @@ summary:focus-visible {
 
   .clients-highlight span:last-child {
     grid-column: auto;
+  }
+
+  .clients-proof {
+    grid-template-columns: 1fr;
+  }
+
+  .clients-final-cta {
+    padding-block: 34px;
+  }
+
+  .clients-final-cta .btn {
+    width: 100%;
   }
 
   .sector-grid,
