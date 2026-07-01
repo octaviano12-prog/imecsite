@@ -3236,3 +3236,307 @@ summary:focus-visible {
     top: auto;
   }
 }
+
+/* Sectors, clients and contact premium pass */
+.page-title:has(+ .sector-showcase),
+.page-title:has(+ .clients-premium) {
+  min-height: clamp(340px, 32vw, 500px);
+  display: grid;
+  align-content: center;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, rgba(3,10,18,.98) 0%, rgba(5,16,28,.94) 44%, rgba(5,22,41,.64) 100%),
+    radial-gradient(circle at 72% 46%, rgba(38,136,255,.28), transparent 34%),
+    url('./assets/imec/footer-industrial.jpg') center right / cover;
+}
+
+.page-title:has(+ .sector-showcase):before,
+.page-title:has(+ .clients-premium):before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(135deg, transparent 0 48%, rgba(105,180,255,.18) 48.3%, transparent 49%),
+    repeating-linear-gradient(90deg, rgba(105,180,255,.04) 0 1px, transparent 1px 86px),
+    repeating-linear-gradient(0deg, rgba(105,180,255,.03) 0 1px, transparent 1px 86px);
+  mask-image: linear-gradient(90deg, transparent 34%, #000 64%, #000);
+}
+
+.sector-showcase,
+.clients-premium {
+  display: grid;
+  grid-template-columns: minmax(300px, 390px) 1fr;
+  gap: clamp(24px, 3vw, 52px);
+  padding: 58px var(--site-gutter);
+  background:
+    radial-gradient(circle at 12% 10%, rgba(38,136,255,.12), transparent 28%),
+    linear-gradient(180deg, #071624, #050d15);
+  border-bottom: 1px solid var(--line);
+}
+
+.sector-lead,
+.clients-intro {
+  position: sticky;
+  top: 96px;
+  align-self: start;
+  padding: 30px;
+  background: linear-gradient(155deg, rgba(19,42,66,.92), rgba(5,16,27,.92));
+  border: 1px solid rgba(105,180,255,.28);
+  border-radius: 6px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 24px 60px rgba(0,0,0,.26);
+}
+
+.sector-lead span,
+.clients-intro span,
+.form-head span {
+  color: var(--blue2);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.sector-lead h2,
+.clients-intro h2,
+.form-head h2 {
+  margin: 10px 0 14px;
+  color: #fff;
+  font-size: clamp(28px, 3vw, 42px);
+  line-height: 1.08;
+}
+
+.sector-lead p,
+.clients-intro p,
+.form-head p {
+  color: var(--muted);
+  line-height: 1.62;
+}
+
+.sector-grid,
+.clients-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.sector-grid article,
+.clients-grid article,
+.client-process article,
+.contact-channels article {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(155deg, rgba(19,42,66,.94), rgba(7,19,32,.98));
+  border: 1px solid rgba(156,185,216,.24);
+  border-radius: 6px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 18px 48px rgba(0,0,0,.18);
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.sector-grid article:hover,
+.clients-grid article:hover,
+.client-process article:hover,
+.contact-channels article:hover {
+  transform: translateY(-5px);
+  border-color: rgba(105,180,255,.6);
+  box-shadow: 0 24px 54px rgba(0,0,0,.28);
+}
+
+.sector-grid article,
+.clients-grid article {
+  min-height: 290px;
+  padding: 26px;
+}
+
+.sector-grid small,
+.clients-grid small {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  color: rgba(242,166,66,.9);
+  font-weight: 900;
+}
+
+.sector-grid svg,
+.clients-grid svg,
+.client-process svg,
+.contact-channels svg {
+  width: 48px;
+  height: 48px;
+  color: var(--blue2);
+  filter: drop-shadow(0 0 12px rgba(38,136,255,.34));
+}
+
+.sector-grid h3,
+.clients-grid h3 {
+  margin: 24px 0 10px;
+  color: #fff;
+  line-height: 1.12;
+}
+
+.sector-grid p,
+.clients-grid p,
+.client-process span,
+.contact-channels span {
+  color: var(--muted);
+  line-height: 1.52;
+}
+
+.sector-grid a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 18px;
+  color: var(--blue2);
+  font-weight: 900;
+}
+
+.sector-proof,
+.client-process {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  padding: 0 var(--site-gutter);
+  background: var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.sector-proof article,
+.client-process article {
+  padding: 28px 22px;
+  text-align: center;
+  background: linear-gradient(145deg, rgba(9,26,42,.98), rgba(6,17,29,.98));
+}
+
+.sector-proof b,
+.clients-intro strong {
+  display: block;
+  color: #fff;
+  font-size: clamp(30px, 4vw, 48px);
+  line-height: 1;
+}
+
+.sector-proof span,
+.clients-intro small {
+  display: block;
+  margin-top: 8px;
+  color: var(--blue2);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.clients-intro > div {
+  margin: 22px 0;
+  padding: 18px;
+  border: 1px solid rgba(105,180,255,.24);
+  border-radius: 6px;
+  background: rgba(105,180,255,.08);
+}
+
+.client-process {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.client-process article {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.client-process b,
+.contact-channels b {
+  display: block;
+  color: #fff;
+}
+
+.premium-contact {
+  grid-template-columns: minmax(0, 1fr) minmax(420px, 560px);
+  gap: clamp(32px, 4vw, 74px);
+  background:
+    linear-gradient(90deg, rgba(5,16,27,.98), rgba(8,31,52,.92)),
+    url('./assets/imec/hero-premium-welder.jpg') center right / cover;
+}
+
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.contact-channels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.contact-channels article {
+  min-height: 150px;
+  padding: 18px;
+}
+
+.contact-channels svg {
+  width: 34px;
+  height: 34px;
+  margin-bottom: 14px;
+}
+
+.quote-form {
+  position: relative;
+  padding: 30px;
+  background: linear-gradient(155deg, rgba(19,42,66,.94), rgba(5,16,27,.96));
+  border: 1px solid rgba(105,180,255,.3);
+  border-radius: 8px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 24px 70px rgba(0,0,0,.3);
+}
+
+.quote-form .btn {
+  min-height: 52px;
+}
+
+.premium-contact + .map-card {
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px) 0 0 / 80px 80px,
+    linear-gradient(145deg, rgba(5,16,27,.96), rgba(4,12,21,.98));
+}
+
+@media (max-width: 1180px) {
+  .sector-showcase,
+  .clients-premium,
+  .premium-contact {
+    grid-template-columns: 1fr;
+  }
+
+  .sector-lead,
+  .clients-intro {
+    position: relative;
+    top: auto;
+  }
+
+  .sector-grid,
+  .clients-grid,
+  .contact-channels {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .sector-grid,
+  .clients-grid,
+  .sector-proof,
+  .client-process,
+  .contact-channels {
+    grid-template-columns: 1fr;
+  }
+
+  .sector-grid article,
+  .clients-grid article {
+    min-height: auto;
+  }
+
+  .quote-form {
+    padding: 22px;
+  }
+}
