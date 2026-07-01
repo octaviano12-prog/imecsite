@@ -30,8 +30,9 @@ import {
   X,
   Youtube
 } from 'lucide-react';
-import heroImage from './assets/imec/hero-welder.jpg';
+import heroImage from './assets/imec/hero-premium-welder.jpg';
 import footerImage from './assets/imec/footer-industrial.jpg';
+import projectShopImage from './assets/imec/project-premium-shop.jpg';
 import portfolioVasos from './assets/imec/portfolio-vasos.jpg';
 import portfolioTubulacoes from './assets/imec/portfolio-tubulacoes.jpg';
 import portfolioEstruturas from './assets/imec/portfolio-estruturas.jpg';
@@ -320,7 +321,7 @@ function ProjectHighlights() {
     ['Tratamento de fuligem', 'Equipamentos para rotina de caldeira, utilidades e melhoria operacional.'],
     ['Paradas industriais', 'Manutencao, reforma, montagem e movimentacao de equipamentos em campo.']
   ];
-  return <section className="project-highlights"><div><span>Projetos executados</span><h2>Obras, equipamentos e manutencoes com foco em resultado</h2><p>Uma apresentacao mais direta para compradores, engenheiros e gestores: o site mostra onde a IMEC atua, o que entrega e como reduz risco tecnico na operacao.</p></div><div>{items.map(([title, text], index) => <article key={title}><strong>{String(index + 1).padStart(2, '0')}</strong><h3>{title}</h3><p>{text}</p><a href="/contato">Falar sobre projeto <ChevronRight size={15} /></a></article>)}</div></section>;
+  return <section className="project-highlights" style={{ backgroundImage: `linear-gradient(90deg, rgba(4,13,22,.98), rgba(4,13,22,.9) 42%, rgba(4,13,22,.68)), url(${projectShopImage})` }}><div><span>Projetos executados</span><h2>Obras, equipamentos e manutencoes com foco em resultado</h2><p>Uma apresentacao mais direta para compradores, engenheiros e gestores: o site mostra onde a IMEC atua, o que entrega e como reduz risco tecnico na operacao.</p></div><div>{items.map(([title, text], index) => <article key={title}><strong>{String(index + 1).padStart(2, '0')}</strong><h3>{title}</h3><p>{text}</p><a href="/contato">Falar sobre projeto <ChevronRight size={15} /></a></article>)}</div></section>;
 }
 
 function FinalCta({ settings }) {
@@ -334,18 +335,18 @@ function Home({ data }) {
   const portfolio = officialPortfolio(data.portfolio || []);
   return <>
     <section className="hero-ref" style={{ backgroundImage: `linear-gradient(90deg, rgba(3,10,18,.98), rgba(3,10,18,.72) 44%, rgba(3,10,18,.26) 70%, rgba(3,10,18,.86)), url(${assetUrl(settings.hero_image_url || home.image_url || heroImage)})` }}>
-      <div className="hero-copy"><span>IMEC Metalúrgica</span><h1>{home.title || 'Soluções completas para projetos e equipamentos industriais'}</h1><p>{home.subtitle || 'Equipamentos e serviços para fabricação de etanol, açúcar e energia, com referência nacional em mais de 100 usinas de açúcar e álcool e na indústria alimentícia.'}</p><div className="hero-actions"><a className="btn primary" href={whatsappUrl(settings)} target="_blank" rel="noreferrer">Solicitar Orçamento <ChevronRight size={18} /></a><a className="btn outline" href="/servicos">Ver Serviços <ChevronRight size={18} /></a></div></div>
-      <aside className="badges"><article><Award /><b>Acompanhamento de Performance</b><small>Suporte após a entrega para eficiência e qualidade.</small></article><article><ShieldCheck /><b>Comunicação Direta</b><small>Contato acessível com o responsável pelo projeto.</small></article><article><Settings /><b>Fornecedor BNDES</b><small>Empresa cadastrada como fornecedora de produtos e serviços.</small></article></aside>
+      <div className="hero-copy"><span>IMEC Metalúrgica</span><h1>{home.title || 'Engenharia, fabricação e montagem para operações industriais críticas'}</h1><p>{home.subtitle || 'Equipamentos, manutenção e projetos para usinas de etanol, açúcar, energia e indústria alimentícia, com experiência aplicada em mais de 100 usinas.'}</p><div className="hero-actions"><a className="btn primary" href={whatsappUrl(settings)} target="_blank" rel="noreferrer">Solicitar orçamento <ChevronRight size={18} /></a><a className="btn outline" href="/produtos">Ver equipamentos <ChevronRight size={18} /></a></div></div>
+      <aside className="badges"><article><Award /><b>Performance em campo</b><small>Acompanhamento técnico depois da entrega para reduzir risco operacional.</small></article><article><ShieldCheck /><b>Execução com responsabilidade</b><small>Fabricação, montagem e manutenção com foco em segurança, prazo e confiabilidade.</small></article><article><Settings /><b>Fornecedor BNDES</b><small>Empresa cadastrada como fornecedora de produtos e serviços.</small></article></aside>
     </section>
     <ImpactStrip />
     <CatalogCta settings={settings} />
-    <section className="home-strip services-strip"><div className="strip-title"><span>Principais Serviços</span><h2>Atuação no setor sucroalcooleiro</h2><a href="/servicos">Ver todos <ChevronRight size={16} /></a></div><div className="service-row">{services.slice(0, 6).map((item) => <ServiceCard item={item} key={item.id} />)}</div></section>
+    <section className="home-strip services-strip"><div className="strip-title"><span>Serviços industriais</span><h2>Da parada programada à expansão da planta</h2><a href="/servicos">Ver todos <ChevronRight size={16} /></a></div><div className="service-row">{services.slice(0, 6).map((item) => <ServiceCard item={item} key={item.id} />)}</div></section>
     <ProcessFlow />
     <ProjectHighlights />
-    <FinalCta settings={settings} />
-    <section className="home-strip portfolio-strip"><div className="strip-title"><span>Produtos</span><h2>Equipamentos para usinas</h2><a href="/portfolio">Ver produtos <ChevronRight size={16} /></a></div><div className="portfolio-row">{portfolio.slice(0, 6).map((item) => <PortfolioCard item={item} key={item.id} />)}</div></section>
+    <section className="home-strip portfolio-strip"><div className="strip-title"><span>Produtos</span><h2>Equipamentos para processo, energia e utilidades</h2><a href="/produtos">Ver produtos <ChevronRight size={16} /></a></div><div className="portfolio-row">{portfolio.slice(0, 6).map((item) => <PortfolioCard item={item} key={item.id} />)}</div></section>
     <section className="quick-links" style={{ backgroundImage: `linear-gradient(90deg,rgba(4,14,24,.94),rgba(8,31,52,.92)),url(${footerImage})` }}><a href="/produtos"><Factory /><b>Produtos</b><small>Equipamentos para usinas, destilação e tratamento de fuligem.</small></a><a href="/setores"><Building2 /><b>Setores</b><small>Etanol, açúcar, energia e indústria alimentícia.</small></a><a href={whatsappUrl(settings)} target="_blank" rel="noreferrer"><UserCircle /><b>Orçamento</b><small>Fale com a equipe técnica da IMEC pelo WhatsApp.</small></a></section>
     <section className="overview-band"><div><span>Referência nacional</span><h2>Mais de 100 usinas atendidas</h2><p>A IMEC reúne experiência no setor sucroalcooleiro, comunicação direta com o cliente e acompanhamento de performance após a entrega.</p></div><div className="overview-grid">{differentials.map((item) => <InfoCard key={item.title} {...item} />)}</div></section>
+    <FinalCta settings={settings} />
   </>;
 }
 
