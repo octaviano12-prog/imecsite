@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">IMEC</title>
+  <desc id="desc">Ícone premium IMEC para favicon e mobile.</desc>
+  <defs>
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff3038"/>
+      <stop offset="1" stop-color="#b90026"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2f6fff"/>
+      <stop offset="1" stop-color="#081d98"/>
+    </linearGradient>
+    <filter id="shadow" x="-18%" y="-18%" width="136%" height="144%">
+      <feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#000816" flood-opacity=".38"/>
+    </filter>
+  </defs>
+  <rect x="12" y="12" width="232" height="232" rx="38" fill="#06111d"/>
+  <g filter="url(#shadow)">
+    <path d="M62 76C97 35 160 28 199 62C224 84 231 119 217 151C238 113 224 67 187 45C142 18 81 29 51 83Z" fill="url(#red)"/>
+    <path d="M198 176C163 217 100 224 60 190C35 168 28 133 43 101C21 139 36 185 73 207C118 234 180 223 210 169Z" fill="url(#red)"/>
+    <path d="M56 79H98L95 139L157 79H204L185 111H174L149 177H105L111 126L71 177H27L57 111H40Z" fill="url(#blue)" stroke="#f7fbff" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M98 79H152L146 138L205 79H226L202 177H158L169 128L116 177H85L92 128L62 177H27L57 111H40L56 79Z" fill="url(#red)" stroke="#f7fbff" stroke-width="6" stroke-linejoin="round"/>
+  </g>
+</svg>

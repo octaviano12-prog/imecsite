@@ -32,6 +32,7 @@ import {
 } from 'lucide-react';
 import heroImage from './assets/imec/hero-premium-welder.jpg';
 import footerImage from './assets/imec/footer-industrial.jpg';
+import imecLogo from './assets/imec/imec-logo-header-clean.svg';
 import projectShopImage from './assets/imec/project-premium-shop.jpg';
 import portfolioVasos from './assets/imec/portfolio-vasos.jpg';
 import portfolioTubulacoes from './assets/imec/portfolio-tubulacoes.jpg';
@@ -293,7 +294,7 @@ function officialPage(page = {}, slug) {
 }
 
 function Logo({ settings = {} }) {
-  return <a className="brand" href="/"><span className="mark">I</span><span><b>IMEC</b><small>Metalúrgica</small></span></a>;
+  return <a className="brand logo-brand" href="/" aria-label="IMEC Metalúrgica"><img src={imecLogo} alt="IMEC Metalúrgica" /></a>;
 }
 
 function Header({ settings, current }) {

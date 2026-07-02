@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 150" role="img" aria-labelledby="title desc">
+  <title id="title">IMEC Metalúrgica</title>
+  <desc id="desc">Logo IMEC compacto para cabeçalho do site.</desc>
+  <defs>
+    <linearGradient id="blue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6aa6ff"/>
+      <stop offset=".2" stop-color="#1f6dff"/>
+      <stop offset=".65" stop-color="#1236ce"/>
+      <stop offset="1" stop-color="#071982"/>
+    </linearGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff5d65"/>
+      <stop offset=".24" stop-color="#f40035"/>
+      <stop offset=".7" stop-color="#c60028"/>
+      <stop offset="1" stop-color="#8f0019"/>
+    </linearGradient>
+    <linearGradient id="steel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset=".35" stop-color="#cddbed"/>
+      <stop offset=".66" stop-color="#6f849b"/>
+      <stop offset="1" stop-color="#ffffff"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#ffffff" stop-opacity=".85"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="depth" x="-12%" y="-22%" width="124%" height="165%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#00030a" flood-opacity=".55"/>
+      <feDropShadow dx="0" dy="1" stdDeviation="1.2" flood-color="#73baff" flood-opacity=".22"/>
+    </filter>
+  </defs>
+  <rect width="620" height="150" fill="none"/>
+  <g filter="url(#depth)">
+    <path d="M137 61C184 18 278 5 352 31C401 48 436 79 454 116C431 84 390 63 337 54C262 42 191 58 145 95Z" fill="url(#red)"/>
+    <path d="M158 111C208 137 305 142 380 118C421 104 452 82 470 58C456 97 419 126 364 139C288 157 205 145 157 113Z" fill="#1177ff"/>
+    <path d="M58 58H492" stroke="url(#steel)" stroke-width="3.2" stroke-linecap="round" opacity=".9"/>
+    <g transform="translate(65 43) skewX(-12)" font-family="Arial Black, Impact, sans-serif" font-weight="900" font-size="114">
+      <text x="0" y="86" fill="url(#blue)" stroke="#06111d" stroke-width="10" paint-order="stroke">I</text>
+      <text x="0" y="86" fill="url(#blue)" stroke="url(#steel)" stroke-width="3.2" paint-order="stroke">I</text>
+      <text x="38" y="86" fill="url(#red)" stroke="#06111d" stroke-width="10" paint-order="stroke">M</text>
+      <text x="38" y="86" fill="url(#red)" stroke="url(#steel)" stroke-width="3.2" paint-order="stroke">M</text>
+      <text x="154" y="86" fill="url(#blue)" stroke="#06111d" stroke-width="10" paint-order="stroke">E</text>
+      <text x="154" y="86" fill="url(#blue)" stroke="url(#steel)" stroke-width="3.2" paint-order="stroke">E</text>
+      <text x="234" y="86" fill="url(#blue)" stroke="#06111d" stroke-width="10" paint-order="stroke">C</text>
+      <text x="234" y="86" fill="url(#blue)" stroke="url(#steel)" stroke-width="3.2" paint-order="stroke">C</text>
+      <path d="M18 17H334" stroke="url(#shine)" stroke-width="4.4" stroke-linecap="round" opacity=".48"/>
+    </g>
+  </g>
+</svg>
